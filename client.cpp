@@ -5,23 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/24 17:04:00 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/07/24 17:09:08 by jdutschk         ###   ########.fr       */
+/*   Created: 2023/07/26 11:07:45 by jdutschk          #+#    #+#             */
+/*   Updated: 2023/07/26 18:38:36 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// client.c
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+#include <cstdlib>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <string.h>
+#include <string>
 
 int main() {
     int clientSocket;
     struct sockaddr_in serverAddr;
-    char buffer[1024];
 
     // Créer un socket TCP
     clientSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -32,7 +30,7 @@ int main() {
 
     // Configuration de l'adresse du serveur
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(8080);
+    serverAddr.sin_port = htons(4242);
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // Adresse IP locale du serveur
 
     // Connexion au serveur
@@ -42,9 +40,21 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    // Envoyer un message au serveur
-    char *message = "Bonjour, serveur !";
-    send(clientSocket, message, strlen(message), 0);
+    // Boucle pour envoyer des phrases en continu
+    while (true) {
+        std::cout << "Entrez une phrase à envoyer (ou tapez 'exit' pour quitter) : ";
+        std::string message;
+        std::getline(std::cin, message); // Lire toute la ligne entrée par l'utilisateur
+
+        // Vérifier si l'utilisateur veut quitter
+        if (message == "exit")
+		{
+            break;
+        }
+
+        // Envoyer la phrase au serveur
+        send(clientSocket, message.c_str(), message.size(), 0);
+    }
 
     // Fermer le socket client
     close(clientSocket);

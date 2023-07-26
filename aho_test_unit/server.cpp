@@ -27,11 +27,12 @@ int main(){
 	int client_fd;
 	struct sockaddr_in client_addr;
 	socklen_t client_len = sizeof(client_addr);
-	while (true) {
 	client_fd = accept(sock_fd, (struct sockaddr*)&client_addr, &client_len);
+	while (true) {
 	char buf[1024];
 		recv(client_fd, buf, sizeof(buf), 0);
 		std::cout << buf << std::endl;
+		send(client_fd, "ok", 2, 0);
 	}
 	close(client_fd);
 	close(sock_fd);
