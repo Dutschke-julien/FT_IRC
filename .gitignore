@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 server
 client
 a.out
 .idea
+=======
+server
+client
+a.out
+.idea
+.vscode
+>>>>>>> d9cc66e2059e6f971473290cd74f41bf11a8d2f6
