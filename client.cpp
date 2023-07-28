@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 11:07:45 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/07/26 18:38:36 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/07/27 17:49:04 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <string>
 
 int main() {
+	char buffer[1024];
     int clientSocket;
     struct sockaddr_in serverAddr;
 
@@ -54,6 +55,9 @@ int main() {
 
         // Envoyer la phrase au serveur
         send(clientSocket, message.c_str(), message.size(), 0);
+		int bytesRead = recv(clientSocket, &buffer, sizeof(buffer), 0);
+		buffer[bytesRead] = '\0';
+		std::cout << buffer << std::endl;
     }
 
     // Fermer le socket client
