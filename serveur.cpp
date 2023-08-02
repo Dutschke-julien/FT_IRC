@@ -1,135 +1,162 @@
-#include <stdio.h>
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   serveur.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
+/*   Updated: 2023/08/02 19:04:23 by jdutschk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <iostream>
+#include <string>
+#include <vector>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <string.h>
+#define MAX_CLIENTS 10
+#define PORT 4242
 
-#define MAX_CLIENTS 10 // Nombre maximum de clients pouvant se connecter simultanément
 
-int main() {
-    int 	serverSocket, maxSocket, activity, clientSocket, i;
-	int clientSockets[MAX_CLIENTS]; 
-    
-	struct sockaddr_in serverAddr, clientAddr; //structure d'adresse type ipv4 pour client et serveur
-	socklen_t clientAddrLen = sizeof(clientAddr);
-    
-	char buffer[1024];
+int main()
+{
+	std::vector<int> listClients(MAX_CLIENTS, 0);
+    int serverSocket, clientSocket;	
+	int activity;
+	sockaddr_in serverAddr, clientAddr;  
+    socklen_t clientAddrLen = sizeof(clientAddr);
+   	char buffer[1024];
 
-    
-	
-	// Créer un socket TCP
+  
+  
+    // Créer un socket TCP , et renvois le Fd correspondant
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (serverSocket < 0) {
-        perror("Erreur lors de la création du socket");
+ 
+	//gestions erreur d'ouverture de socket
+    if (serverSocket < 0)
+	{
+        perror("Erreur lors de la création du socket serveur\n");
         exit(EXIT_FAILURE);
-    }
+	}
 
     // Lier le socket à une adresse IP et un port
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(4242);
-    serverAddr.sin_addr.s_addr = INADDR_ANY;
-
-	//bind va lier le fd du socket server avec la structure d'adresse serveur.
-    if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
-        perror("Erreur lors de la liaison du socket");
+    serverAddr.sin_family = AF_INET; //set la famille d'addresse en ipv4
+    serverAddr.sin_port = htons(PORT); //convertis le port 4242
+    serverAddr.sin_addr.s_addr = INADDR_ANY; //adresse autoriser a se connecter a se socket 
+	
+	
+	//lie le socket a toute les ip machines et au port 4242
+	if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) 
+	{
+        perror("Erreur lors de la liaison du socket serveur avec les infos donner");
         close(serverSocket);
         exit(EXIT_FAILURE);
     }
+
 
     // Mettre le socket en mode écoute
-    if (listen(serverSocket, 5) < 0)
+    if (listen(serverSocket, 5) < 0) 
 	{
-        perror("Erreur lors de la mise en écoute du socket");
+        perror("Erreur lors de la mise en écoute du socket serveur\n");
         close(serverSocket);
         exit(EXIT_FAILURE);
     }
 
-    printf("En attente de connexions...\n");
 
-    while (1) {
-        // Initialiser l'ensemble des sockets (clientSockets) et définir le descripteur maximum
-        fd_set readSockets;//enssemble de descripteur utilisable par select()
-        FD_ZERO(&readSockets); // met a vide l'ensemble de descripteur
-        FD_SET(serverSocket, &readSockets); //ajoute le socket du serveur a l'enssemble
 
-        maxSocket = serverSocket;//select va regarder jusqu'au plus au fd connu dans readSocket ici server Socket
+    std::cout << "En attente de connexions..." << std::endl;
 
-        // Ajouter les sockets des clients actifs à l'ensemble 
-        for (i = 0; i < MAX_CLIENTS; i++)
+
+
+    while (true) 
+	{
+     	//creer la plage de socket que select va  analyser
+	    fd_set readSockets;
+        FD_ZERO(&readSockets);
+        FD_SET(serverSocket, &readSockets);
+
+
+        for (int i = 0; i < MAX_CLIENTS; i++)		
 		{
-            clientSocket = clientSockets[i];
-            if (clientSocket > 0)
+            clientSocket = listClients[i];
+			
+			//si le fd est superieur a zero , on le rajoute dans readSockets
+            if (clientSocket > 0) 
 			{
                 FD_SET(clientSocket, &readSockets);
-                if (clientSocket > maxSocket) //mettre a jour maxSocket pour select()
-				{
-                    maxSocket = clientSocket;
-                }
             }
         }
 
 
-        // Utiliser select() pour attendre l'activité sur les sockets
-        activity = select(maxSocket + 1, &readSockets, NULL, NULL, NULL);
-        if (activity < 0)
+
+        activity = select(FD_SETSIZE, &readSockets, NULL, NULL, NULL);
+
+        if (activity < 0) 
 		{
-            perror("Erreur lors de l'appel à select");
+            perror("Erreur lors de l'appel à select()\n");
             close(serverSocket);
             exit(EXIT_FAILURE);
         }
 
-
-
-        // Si une nouvelle connexion entrante arrive, accepter la connexion
+		//regarde si le socket client est pret a lire 
         if (FD_ISSET(serverSocket, &readSockets)) 
 		{
-            clientSocket = accept(serverSocket, (struct sockaddr *)&clientAddr, &clientAddrLen);
-         
-		 
-		    if (clientSocket < 0) {
-                perror("Erreur lors de l'acceptation de la connexion");
+			//acccept la nouvelle connection et stocker les infos dans clientAddr
+			clientSocket = accept(serverSocket, (struct sockaddr *)&clientAddr, &clientAddrLen);
+            
+			if (clientSocket < 0) 
+			{
+                perror("Erreur lors de l'acceptation de la connexion du nouveau client au serveur\n");
                 close(serverSocket);
                 exit(EXIT_FAILURE);
             }
 
-            printf("Nouvelle connexion, socket fd : %d, adresse IP : %s, port : %d\n",
-                   clientSocket, inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
 
-            // Ajouter le nouveau socket client à l'ensemble
-            for (i = 0; i < MAX_CLIENTS; i++)
+            std::cout << "Nouvelle connexion, socket fd : " << clientSocket //fd correspondant
+                      << ", adresse IP : " << inet_ntoa(clientAddr.sin_addr) //ip correspondant
+                      << ", port : " << clientAddr.sin_port << std::endl; // port correspondant
+
+
+            for (int i = 0; i < MAX_CLIENTS; i++) 
 			{
-                if (clientSockets[i] == 0) {
-                    clientSockets[i] = clientSocket;
+				//ajoute la nouvelle connection sur une case disponible du vecteur
+                if (listClients[i] == 0) 
+				{
+                    listClients[i] = clientSocket;
                     break;
                 }
             }
         }
-
-        
 		
 		
-		
-		// Traiter les données reçues des clients existants
-        for (i = 0; i < MAX_CLIENTS; i++) {
-            clientSocket = clientSockets[i];
-
-            if (FD_ISSET(clientSocket, &readSockets)) {
+        for (int i = 0; i < MAX_CLIENTS; i++) 
+		{
+            clientSocket = listClients[i];
+            //regarde si les socket des clients sont pret a lire
+			if (FD_ISSET(clientSocket, &readSockets))
+			{
+				//stock les infos lues
                 int bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0);
-                if (bytesRead <= 0) {
-                    // Connexion interrompue ou erreur, fermer le socket et supprimer le client
+                
+				//libere la place en cas de deconections 
+				if (bytesRead <= 0) 
+				{
                     getpeername(clientSocket, (struct sockaddr *)&clientAddr, &clientAddrLen);
-                    printf("Client déconnecté, adresse IP : %s, port : %d\n",
-                           inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+                    std::cout << "Client déconnecté, adresse IP : " << inet_ntoa(clientAddr.sin_addr)
+                              << ", port : " << clientAddr.sin_port << std::endl;
 
                     close(clientSocket);
-                    clientSockets[i] = 0;
-                } else {
-                    // Afficher les données reçues
-                    buffer[bytesRead] = '\0'; // Ajouter le caractère de fin de chaîne
-                    printf("Message reçu du client %d : %s\n", clientSocket, buffer);
+                    listClients[i] = 0;
+                }
+		  	
+			
+				else //affiche le message sur le serveur et envois une reponse au client vis a vis du serveur
+				{
+                    buffer[bytesRead] = '\0';
+                    std::cout << "Message reçu du client " << clientSocket << " : " << buffer << std::endl;
 
-                    // Répondre au client (facultatif)
                     const char *response = "Message reçu par le serveur !";
                     send(clientSocket, response, strlen(response), 0);
                 }
@@ -137,7 +164,6 @@ int main() {
         }
     }
 
-    // Fermer le socket serveur (ce code ne sera jamais atteint dans ce cas)
     close(serverSocket);
 
     return 0;
