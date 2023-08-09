@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/08/02 19:04:23 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/08/09 18:15:42 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #define MAX_CLIENTS 10
 #define PORT 4242
 
-    
+
 int set_serveur_socket()
 {
     sockaddr_in serverAddr;
@@ -79,44 +79,16 @@ void Make_Sets_Sockets(int serverSocket_fd, const std::vector<int>& list_Clients
 }
 
 
-void launch_serveur(int serverSocket_fd)
+
+
+void add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::vector<int>& list_Clients_fd)
 {
-    std::vector<int> list_Clients_fd(MAX_CLIENTS, 0);
-    
-    int clientSocket_fd;
-	sockaddr_in clientAddr;  
-    socklen_t clientAddrLen = sizeof(clientAddr);
-   	char buffer[1024];
-   	
-   	
-   	
-     while (true) 
-	{
-     	//creer la plage de socket que select va  analyser
-        fd_set Sets_Sockets;
-        Make_Sets_Sockets(serverSocket_fd, list_Clients_fd, Sets_Sockets);
-        
-        for (int i = 0; i < MAX_CLIENTS; i++)		
-		{
-            clientSocket_fd = list_Clients_fd[i];
-			
-			//si le fd est superieur a zero , on le rajoute dans Sets_Sockets
-            if (clientSocket_fd > 0) 
-			{
-                FD_SET(clientSocket_fd, &Sets_Sockets);
-            }
-        }
+	
+	int clientSocket_fd;
+	sockaddr_in clientAddr;
+	socklen_t clientAddrLen = sizeof(clientAddr);
 
-
-        if (select(FD_SETSIZE, &Sets_Sockets, NULL, NULL, NULL) == -1) 
-		{
-            perror("Erreur lors de l'appel à select()\n");
-            close(serverSocket_fd);
-            exit(EXIT_FAILURE);
-        }
-
-
-		//regarde si un des  sockets clients est pret a lire 
+	//regarde si le socket serveur est pret pour la lecture`
         if (FD_ISSET(serverSocket_fd, &Sets_Sockets)) 
 		{
 			//acccept la nouvelle connection et stocker les infos dans clientAddr
@@ -145,41 +117,79 @@ void launch_serveur(int serverSocket_fd)
                 }
             }
         }
-		
-		
-        for (int i = 0; i < MAX_CLIENTS; i++) 
+}
+
+
+
+
+void Get_Send(std::vector<int>& list_Clients_fd, fd_set Sets_Sockets)
+{
+	char message[1024];
+	sockaddr_in clientAddr;
+	socklen_t clientAddrLen = sizeof(clientAddr);
+	
+	for (int i = 0; i < MAX_CLIENTS; i++) 
 		{
-            clientSocket_fd = list_Clients_fd[i];
-            //regarde si les socket des clients sont pret a lire
-			if (FD_ISSET(clientSocket_fd, &Sets_Sockets))
+            //regarde si le socket  est pret a lire d'apres select 
+			if (FD_ISSET(list_Clients_fd[i], &Sets_Sockets))
 			{
 				//stock les infos lues
-                int bytesRead = recv(clientSocket_fd, buffer, sizeof(buffer), 0);
+                int bytesRead = recv(list_Clients_fd[i], message, sizeof(message), 0);
                 
 				//libere la place en cas de deconnections 
 				if (bytesRead <= 0) 
 				{
-                    getpeername(clientSocket_fd, (struct sockaddr *)&clientAddr, &clientAddrLen);
+                    getpeername(list_Clients_fd[i], (struct sockaddr *)&clientAddr, &clientAddrLen);
                     std::cout << "Client déconnecté, adresse IP : " << inet_ntoa(clientAddr.sin_addr)
                               << ", port : " << clientAddr.sin_port << std::endl;
 
-                    close(clientSocket_fd);
+                    close(list_Clients_fd[i]);
                     list_Clients_fd[i] = 0;
                 }
-		  	
-			
 				else //affiche le message sur le serveur et envois une reponse au client vis a vis du serveur
 				{
-                    buffer[bytesRead] = '\0';
-                    std::cout << "Message reçu du client " << clientSocket_fd << " : " << buffer << std::endl;
+                    message[bytesRead] = '\0';
+                    std::cout << "Message reçu du client " << list_Clients_fd[i] << " : " << message << std::endl;
 
                     const char *response = "Message reçu par le serveur !";
-                    send(clientSocket_fd, response, strlen(response), 0);
+                    send(list_Clients_fd[i], response, strlen(response), 0);
                 }
             }
         }
+}
+
+
+
+void launch_serveur(int serverSocket_fd)
+{
+    std::vector<int> list_Clients_fd(MAX_CLIENTS, 0);
+    
+    int clientSocket_fd;
+
+	sockaddr_in clientAddr;  
+
+    socklen_t clientAddrLen = sizeof(clientAddr);
+   	  	
+     while (true) 
+	{
+     	//creer la plage de socket que select va  analyser
+        fd_set Sets_Sockets;
+        Make_Sets_Sockets(serverSocket_fd, list_Clients_fd, Sets_Sockets);
+
+        if (select(FD_SETSIZE, &Sets_Sockets, NULL, NULL, NULL) == -1) 
+		{
+            perror("Erreur lors de l'appel à select()\n");
+            close(serverSocket_fd);
+            exit(EXIT_FAILURE);
+        }
+
+		add_new_connection(serverSocket_fd, Sets_Sockets, list_Clients_fd);
+		Get_Send(list_Clients_fd, Sets_Sockets);
     }
 }
+
+
+
 
 
 
