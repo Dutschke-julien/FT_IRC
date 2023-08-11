@@ -22,7 +22,8 @@ CXX = g++
 CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
 # Fichiers sources du programme
-SOURCES = main.cpp
+SOURCES = main.cpp\
+		  serveur.cpp\
 
 # Fichiers objets
 OBJECTS = $(SOURCES:.cpp=.o)

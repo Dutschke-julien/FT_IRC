@@ -1,7 +1,23 @@
-int main(int ac, char *av[])
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/11 15:18:20 by jdutschk          #+#    #+#             */
+/*   Updated: 2023/08/11 15:18:20 by jdutschk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Serveur.hpp"
+
+int main()
 {
-	(void)av;
-	if (ac != 3)
-		return 1;
-	return 0;
+
+	Serveur Serveur;
+  
+    Serveur.launch_serveur();
+
+    return 0;
 }
