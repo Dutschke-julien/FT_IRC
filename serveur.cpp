@@ -190,3 +190,12 @@ void Serveur::launch_serveur()
 		read_client_message(list_Clients_fd, Sets_Sockets);
     }
 }
+
+int main()
+{
+	Serveur Serveur;
+  
+    Serveur.launch_serveur();
+
+    return 0;
+}
