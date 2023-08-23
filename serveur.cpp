@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/08/11 17:02:36 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/08/23 18:31:40 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,13 @@ Serveur::Serveur()
 
 
 
-void Make_Sets_Sockets(int serverSocket_fd, const std::vector<int>& list_Clients_fd, fd_set& Sets_Sockets)
+void Serveur::Make_Sets_Sockets(int serverSocket_fd, const std::vector<int>& list_Clients_fd, fd_set& Sets_Sockets)
 {
     FD_ZERO(&Sets_Sockets);
     FD_SET(serverSocket_fd, &Sets_Sockets);
 
     for (int i = 0; i < MAX_CLIENTS; i++)		
-		{
-			//si le fd est superieur a zero , on le rajoute dans Sets_Sockets
+		{	
             if (list_Clients_fd[i] > 0) 
 			{
                 FD_SET(list_Clients_fd[i], &Sets_Sockets);
@@ -112,6 +111,8 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
                 if (list_Clients_fd[i] == 0) 
 				{
                     list_Clients_fd[i] = clientSocket_fd;
+					mapClients[clientSocket_fd].clientAddr = clientAddr;
+					mapClients[clientSocket_fd].status = 0;
                     break;
                 }
             }
@@ -128,9 +129,9 @@ void Serveur::deconnect_client(std::vector<int>& list_Clients_fd, int i)
 	getpeername(list_Clients_fd[i], (struct sockaddr *)&clientAddr, &clientAddrLen);
                    
 	std::cout << "Client déconnecté, adresse IP : " << inet_ntoa(clientAddr.sin_addr)<< ", port : " << clientAddr.sin_port << std::endl;
-                  
+	
+	mapClients.erase(list_Clients_fd[i]);
 	close(list_Clients_fd[i]);
-                  
 	list_Clients_fd[i] = 0;
 }
 

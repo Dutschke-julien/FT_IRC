@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/08/11 17:28:28 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/08/23 18:18:16 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include <string>
+#include <map>
 # include <vector>
 # include <unistd.h>
 # include <cstring>
@@ -24,16 +25,25 @@
 # define MAX_CLIENTS 10
 # define PORT 4242
 
+struct ClientInfo
+{
+    sockaddr_in clientAddr;
+	int status;
+};
+
 class Serveur
 {
 	private:
 	int	serverSocket_fd;
+	std::map <int, ClientInfo> mapClients;
 	std::vector<int> list_Clients_fd;
 	
 	public:
 	Serveur();
 	~Serveur();
-	
+
+
+	void Make_Sets_Sockets(int serverSocket_fd, const std::vector<int>& list_Clients_fd, fd_set& Sets_Sockets);
 	void launch_serveur();
 	void read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets_Sockets);
 	void print_message_client(const std::vector<int>& list_Clients_fd, int i, char *message);
