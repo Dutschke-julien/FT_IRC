@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/08/24 18:01:30 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/08/28 13:14:56 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 #define NO_PWD -2
 #define NO_NKN -1
+#define ALL_OK 0
 
 struct ClientInfo
 {
