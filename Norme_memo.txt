@@ -1,0 +1,71 @@
+4.1 Établissement de connexion
+
+Les commandes décrites dans cette section sont utilisées pour établir une connexion avec un serveur IRC, aussi bien par un client que par un serveur, ainsi qu'une déconnexion correcte.
+
+Une commande "PASS" n'est pas nécessaire pour établir une connexion, mais elle doit précéder la combinaison suivante des messages NICK/USER. Il est fortement recommandé que toutes les connexions de serveurs utilisent un mot de passe afin de donner un niveau de sécurité satisfaisant aux connexions. L'ordre des commandes recommandé pour l'enregistrement d'un client est le suivant :
+1. Message PASS
+2. Message NICK
+3. Message USER
+
+
+
+4.1.1 Message PASS
+Commande : PASS
+Paramètres : <mot de passe>
+La commande PASS est utilisée pour définir le 'mot de passe de connexion'.
+Le mot de passe peut et doit être défini avant toute tentative de connexion.
+A l'heure actuelle, cela signifie que les clients doivent envoyer une commande PASS avant d'envoyer la combinaison NICK/USER,
+et que les serveurs doivent envoyer une commande PASS avant toute commande SERVER.
+Le mot de passe fourni doit correspondre à celui contenu dans les lignes C/N (pour les serveurs) ou dans les lignes I (pour les clients).
+Il est possible d'envoyer plusieurs commandes PASS avant de s'enregistrer,
+mais seule la dernière est utilisée pour la vérification, et elle ne peut plus changer une fois la connexion établie.
+Réponses numériques :
+ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
+Exemple:
+PASS motdepasssecretici
+
+
+
+
+4.1.2 Message NICK
+Commande : NICK
+Paramètres : <pseudonyme> [ <compteur de distance> ]
+Le message NICK est utilisé pour donner un pseudonyme à un utilisateur,
+ou pour changer le pseudonyme précédent. Le paramètre <compteur de distance> n'est utilisé que par les serveurs,
+et sert à indiquer quelle est la distance entre un utilisateur et son serveur local.
+Une connexion locale a un compteur de distance de zéro. Si un client fournit un compteur de distance, il doit être ignoré.
+Si un message NICK arrive à un serveur qui connaît déjà un autre client de pseudo identique, une collision de pseudonymes a lieu.
+Le résultat d'une collision de pseudonymes est la suppression de toutes les instances du pseudonyme de la base du serveur,
+et l'envoi d'un message KILL afin de retirer le pseudonyme des bases de données de tous les autres serveurs.
+Si le message NICK à l'origine de la collision de pseudonymes est un changement de pseudonyme, alors le pseudo originel (l'ancien) doit aussi être retiré.
+
+Si le serveur reçoit un NICK identique d'un client auquel il est connecté directement, il peut envoyer un ERR_NICKCOLLISION au client local, ignorer la commande NICK, et ne pas générer de KILLs.
+
+Réponses numériques :
+           ERR_NONICKNAMEGIVEN             ERR_ERRONEUSNICKNAME
+           ERR_NICKNAMEINUSE               ERR_NICKCOLLISION
+Exemples:
+    NICK Wiz ; Ajout d'un nouveau pseudo "Wiz".
+    :WiZ NICK Kilroy ; WiZ change son pseudo en Kilroy. 
+
+
+4.1.3 Message USER
+Commande: USER
+Paramètres: <nom d'utilisateur> <hôte> <nom de serveur> <nom réel>
+Le message USER est utilisé au début d'une connexion pour spécifier le nom d'utilisateur, le nom d'hôte, le nom de serveur, et le véritable nom d'un nouvel utilisateur.
+Il est aussi utilisé lors de la communication entre les serveurs pour indiquer l'arrivée d'un nouvel utilisateur sur IRC,
+puisque c'est seulement après avoir envoyé et le USER et le NICK qu'un utilisateur devient enregistré.
+Entre serveurs, USER doit être préfixé du pseudonyme du client.
+Notez que le nom d'hôte et le nom de serveur sont généralement ignorés par le serveur IRC quand la commande USER vient directement d'un client (pour des raisons de sécurité),
+mais sont utilisés dans la communication de serveur à serveur.
+Cela signifie que NICK doit toujours être envoyé à un serveur distant quand un nouvel utilisateur est ajouté au reste du réseau,
+avant que le USER correspondant soit envoyé.
+Notez aussi que le paramètre 'vrai nom' doit être le dernier paramètre, car il peut contenir des espaces, et il doit être préfixé par deux points (':') de façon à être reconnu comme tel.
+Puisqu'il est facile pour un client de mentir sur son nom si on se base uniquement sur le message USER, il est recommandé d'utiliser un "serveur d'identité".
+Si l'hôte dont l'utilisateur se connecte a un serveur de ce type activé, le nom d'utilisateur est défini par la réponse de ce "serveur d'identité".
+
+Réponses numériques :
+
+           ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
+Exemples:
+    USER guest tolmoon tolsun :Ronnie Reagan ; Utilisateur s'enregistrant avec un nom d'utilisateur de "guest" et un vrai nom de "Ronnie Reagan". :testnick USER guest tolmoon tolsun :Ronnie Reagan ; message entre les serveurs contenant le pseudonyme à qui appartient la commande USER. 
