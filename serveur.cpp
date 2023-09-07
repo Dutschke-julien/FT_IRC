@@ -228,22 +228,31 @@ void Serveur::launch_serveur()
 		read_client_message(list_Clients_fd, Sets_Sockets);
     }
 }
+int ft_strlen(char *str){
+	while(str[i])
+		i++;
+	return i;
+}
 
-int main(int argc, char **argv)
+int main(int ac, char **av)
 {
-	if (argc != 3)
+	if (ac != 3)
 	{
-        std::cout << "Usage: " << argv[0] << " <port> <password>" << std::endl;
+        std::cout << "Usage: " << av[0] << " <port> <password>" << std::endl;
         return 1;
-    }
-
-	if (atoi(argv[1]) == 0)
+    	}
+	if (ft_strlen(av[2]) > 8)
+	{
+		std::cout << "[Error] password too long!\n";
+		return (1);
+	}
+	if (atoi(av[1]) <= 0 || atoi(av[1]) > 65535)
 	{
 		std::cout <<"Not valid port\n";
 		return 1;
 	}
-	Serveur Serveur(atoi(argv[1]));
-	Serveur.set_password(argv[2]);
+	Serveur Serveur(atoi(av[1]));
+	Serveur.set_password(av[2]);
     Serveur.launch_serveur();
 
     return 0;
