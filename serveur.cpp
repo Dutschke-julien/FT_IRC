@@ -6,11 +6,46 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/08/24 18:13:30 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/08 18:50:33 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Serveur.hpp"
+
+void Serveur::execute_message(int fd_key, char *message)
+{
+	std::string input = message;
+	
+	if (input.find("CAP LS 302") == 0)
+	{
+		std::cout << "demande bien eu pour cap ls 302";
+	}
+	
+	else if (mapClients[fd_key].status == NO_PWD)
+	{
+		if (input != password)
+		{
+			std::cout << "le client donne [" + input + "]" << "et le mdp original [" + password + "]";
+			send(fd_key, "Wrong password\nTry again\r\n", 25, 0);
+		}
+		else
+		{
+			mapClients[fd_key].status = NO_NKN;
+			send(fd_key, "password ok\nchoose a nickname\r\n", 30, 0);
+		}
+	}
+	else if (mapClients[fd_key].status == NO_NKN)
+	{
+		if (input.find("/Nickname") == 0)
+		{
+			mapClients[fd_key].nickname = input.substr(10);
+			send(fd_key, "Nickname set\n", 13, 0);
+		}
+		else
+			send(fd_key, "Please choose a Nickname first with /Nickname\r\n", 46, 0);
+	}
+	std::cout << "debug" << message << std::endl;
+}
 
 void Serveur::set_port(int pt)
 {
@@ -155,39 +190,14 @@ void Serveur::deconnect_client(std::vector<int>& list_Clients_fd, int i)
 	list_Clients_fd[i] = 0;
 }
 
-void Serveur::execute_message(int fd_key, char *message)
-{
-	std::string input = message;
-	
-	if (mapClients[fd_key].status == NO_PWD)
-	{
-		if (input != password)
-		{
-			std::cout << "le client donne [" + input + "]" << "et le mdp original [" + password + "]";
-			send(fd_key, "Wrong password\nTry again\n", 25, 0);
-		}
-		else
-		{
-			mapClients[fd_key].status = NO_NKN;
-			send(fd_key, "password ok\nchoose a nickname\n", 30, 0);
-		}
-	}
-	else if (mapClients[fd_key].status == NO_NKN)
-	{
-		if (input.find("/Nickname") == 0)
-		{
-			mapClients[fd_key].name = input.substr(10);
-			send(fd_key, "Nickname set\n", 13, 0);
-		}
-		else
-			send(fd_key, "Please choose a Nickname first with /Nickname\n", 46, 0);
-	}
-}
+
 
 void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets_Sockets)
 {
 	char message[1024];
-	
+	static std::map<int, std::string> clientData;
+
+
 	for (int i = 0; i < MAX_CLIENTS; i++) 
 		{
             //regarde si le socket  est pret a lire d'apres select 
@@ -202,10 +212,29 @@ void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets
 				else //affiche le message sur le serveur et envois une reponse au client vis a vis du serveur
 				{
             		message[bytesRead] = '\0';
-					execute_message(list_Clients_fd[i], message);
+					clientData[list_Clients_fd[i]] += message;
+					processCommands(clientData[list_Clients_fd[i]], list_Clients_fd[i]);
                 }
             }
         }
+}
+
+void Serveur::processCommands(std::string& clientData, int fd_key_client)
+{
+    while (true)
+	{
+        size_t pos = clientData.find("\r");
+        if (pos != std::string::npos)
+		{
+            std::string command = clientData.substr(0, pos);  // Extract the command
+            clientData.erase(0, pos + 2);  // Remove the extracted command from clientData
+            execute_message(fd_key_client, (char *)command.c_str());
+        }
+		else
+		{
+            break;  // Pas de commandes complètes restantes
+        }
+    }
 }
 
 void Serveur::launch_serveur()
@@ -228,7 +257,9 @@ void Serveur::launch_serveur()
 		read_client_message(list_Clients_fd, Sets_Sockets);
     }
 }
-int ft_strlen(char *str){
+int ft_strlen(char *str)
+{
+	int i = 0;
 	while(str[i])
 		i++;
 	return i;

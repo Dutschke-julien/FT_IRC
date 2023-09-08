@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/08/28 13:14:56 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/08 18:45:23 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ struct ClientInfo
 	std::string nickname;
 	std::string username;
     	sockaddr_in clientAddr;
-	vector<string>	c_channels;
+	std::vector<std::string>	c_channels;
 	int status;
 };
 
 class Serveur
 {
 	private:
-	vector<string>	s_channels;
+	std::vector<std::string>	s_channels;
 	int	serverSocket_fd;
 	std::map <int, ClientInfo> mapClients;
 	std::vector<int> list_Clients_fd;
@@ -53,6 +53,7 @@ class Serveur
 
 	void set_port(int pt);
 	int get_port();
+	void processCommands(std::string& clientData, int fd_key_client);
 	void set_password(std::string pass);
 	std::string get_password();
 	void Make_Sets_Sockets(int serverSocket_fd, const std::vector<int>& list_Clients_fd, fd_set& Sets_Sockets);
