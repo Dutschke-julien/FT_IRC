@@ -30,14 +30,17 @@
 
 struct ClientInfo
 {
-	std::string name;
-    sockaddr_in clientAddr;
+	std::string nickname;
+	std::string username;
+    	sockaddr_in clientAddr;
+	vector<string>	c_channels;
 	int status;
 };
 
 class Serveur
 {
 	private:
+	vector<string>	s_channels;
 	int	serverSocket_fd;
 	std::map <int, ClientInfo> mapClients;
 	std::vector<int> list_Clients_fd;
