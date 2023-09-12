@@ -26,15 +26,16 @@ SOURCES =   main.cpp\
 			serveur.cpp\
 
 # Fichiers objets
-OBJECTS = $(SOURCES:.cpp=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(NAME)
+$(NAME):
+	$(CXX) $(CXXFLAGS) $(SOURCES)-o $(NAME)
 
 clean:
 	rm -f $(OBJECTS)
 
 fclean: clean
 	rm -f $(NAME)
+
+re : fclean all

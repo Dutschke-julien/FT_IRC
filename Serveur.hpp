@@ -6,37 +6,26 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/11 16:32:45 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/12 16:26:53 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVEUR_HPP
 # define SERVEUR_HPP
 
+# include <stdio.h>
 # include <iostream>
+# include <stdlib.h>
 # include <string>
-#include <map>
+# include <map>
 # include <vector>
 # include <unistd.h>
 # include <cstring>
 # include <arpa/inet.h>
 # include <netinet/in.h>
-
+# include "client.hpp"
 # define MAX_CLIENTS 10
 
-#define NO_PWD -2
-#define NO_NKN -1
-#define ALL_OK 0
-
-
-
-struct Client
-{
-	sockaddr_in clientAddr;
-	std::string nickname;
-	std::string username;
-	int status;
-};
 
 class Serveur
 {
