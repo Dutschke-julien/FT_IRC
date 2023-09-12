@@ -16,14 +16,14 @@
 NAME = ircserv
 
 # Compilateur
-CXX = g++
+CXX = c++
 
 # Flags de compilation
 CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
 # Fichiers sources du programme
-SOURCES = main.cpp\
-		  serveur.cpp\
+SOURCES =   main.cpp\
+			serveur.cpp\
 
 # Fichiers objets
 OBJECTS = $(SOURCES:.cpp=.o)
