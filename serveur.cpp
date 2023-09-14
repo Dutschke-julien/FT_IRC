@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/12 16:26:33 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:58:17 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,8 +205,8 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
                 if (list_Clients_fd[i] == 0) 
 				{
                     list_Clients_fd[i] = clientSocket_fd;
-					_mapClients[clientSocket_fd].clientAddr = clientAddr;
-					_mapClients[clientSocket_fd].status = NO_PWD;
+					_mapClients[clientSocket_fd].set_clientAddr(clientAddr);
+					_mapClients[clientSocket_fd].set_status(NO_PWD);
                     break;
                 }
             }

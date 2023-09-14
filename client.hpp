@@ -10,6 +10,16 @@ class Client;
 
 # include "Serveur.hpp"
 
+
+
+
+struct package
+{
+  int type;
+  char* cmd;
+  char* extra;	
+};
+
 class Client
 {
 	private:

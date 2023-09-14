@@ -20,11 +20,6 @@ void Client::set_username(std::string nick)
 	_username = nick;
 }
 
-sockaddr_in Client::get_clientAddr(void)
-{
-	return (_clientAddr);
-}
-
 std::string Client::get_nickname(void)
 {
 	return (_nickname);
@@ -42,7 +37,7 @@ sockaddr_in Client::get_clientAddr(void)
 
 void Client::set_clientAddr(sockaddr_in new_struct)
 {
-	_clientAddr = new_struct;
+	_clientAddr = new_struct;	
 }
 
 Client::Client()
