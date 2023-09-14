@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/12 16:26:53 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/14 17:45:36 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,9 @@ class Serveur
 	std::string get_password();
 	
 	
+	void print_cmd(std::string cmd, int fd_key);
+	void parsing_cmd(Client client, int fd_key);
 	void Make_Sets_Sockets(fd_set& Sets_Sockets);
-	void processCommands(std::string& clientData, int fd_key_client);
 	void launch_serveur();
 	void read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets_Sockets);
 	void execute_message(int fd_key, char *message);

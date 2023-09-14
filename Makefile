@@ -24,7 +24,7 @@ CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 # Fichiers sources du programme
 SOURCES =   main.cpp\
 			serveur.cpp\
-			client.cpp\--
+			client.cpp\
 
 # Fichiers objets
 
@@ -34,7 +34,7 @@ $(NAME):
 	$(CXX) $(CXXFLAGS) $(SOURCES)-o $(NAME)
 
 clean:
-	rm -f $(OBJECTS)
+	
 
 fclean: clean
 	rm -f $(NAME)

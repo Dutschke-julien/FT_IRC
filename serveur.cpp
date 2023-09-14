@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/13 16:58:17 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/14 17:45:12 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void Serveur::deconnect_client(std::vector<int>& list_Clients_fd, int i)
 void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets_Sockets)
 {
 	char message[1024];
-	static std::map<int, std::string> clientData;
 
 
 	for (int i = 0; i < MAX_CLIENTS; i++) 
@@ -123,20 +122,31 @@ void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets
 				else //affiche le message sur le serveur et envois une reponse au client vis a vis du serveur
 				{
             		message[bytesRead] = '\0';
-					clientData[list_Clients_fd[i]] += message;
-					processCommands(clientData[list_Clients_fd[i]], list_Clients_fd[i]);
+					_mapClients[list_Clients_fd[i]].pack.cmd += message;
+					parsing_cmd(_mapClients[list_Clients_fd[i]], list_Clients_fd[i]);
                 }
             }
         }
 }
 
-void Serveur::processCommands(std::string& clientData, int fd_key_client)
+void Serveur::print_cmd(std::string cmd, int fd_key)
 {
- 		//code pour executer les messages complet dans execute_message
-	(void)clientData;
-	(void)fd_key_client;
+	std::cout << "le client :" << fd_key << "a envoyer la cmd suivante : " << cmd << std::endl;
 }
 
+void Serveur::parsing_cmd(Client client, int fd_key)
+{
+	int find_command = 0;
+
+	find_command = client.pack.cmd.find("\r\n");
+
+	while (find_command != -1)
+	{
+		print_cmd(client.pack.cmd.substr(0, find_command + 2), fd_key);
+		client.pack.cmd.erase(0, find_command + 2);
+		find_command = client.pack.cmd.find("\r\n");
+	}
+}
 
 
 void Serveur::launch_serveur()

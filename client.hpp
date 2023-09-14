@@ -16,14 +16,13 @@ class Client;
 struct package
 {
   int type;
-  char* cmd;
-  char* extra;	
+  std::string cmd;
+  std::string extra;	
 };
 
 class Client
 {
 	private:
-	
 	sockaddr_in _clientAddr;
 	std::string _nickname;
 	std::string _username;
@@ -41,6 +40,7 @@ class Client
 	std::string get_username(void);
 	int get_status(void);
 	void set_status(int status);
+	struct package pack;
 };
 
 
