@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/14 17:45:12 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/18 15:17:15 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,10 +131,31 @@ void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets
 
 void Serveur::print_cmd(std::string cmd, int fd_key)
 {
-	std::cout << "le client :" << fd_key << "a envoyer la cmd suivante : " << cmd << std::endl;
+	std::cout << "le client [" << fd_key << "] a envoyer la cmd suivante : " << cmd << std::endl;
+
+	if (cmd == "CAP LS 302\r\n")
+	{
+		std::string response = "CAP * LS :\r\n";
+		send(fd_key, response.c_str(), response.length(), 0);
+	}
+	if (cmd == "NICK jdutschk\r\n")
+	{
+		std::string response = ":yourserver 001 jdutschk :Welcome to the IRC Server jdutschk!@localhost\r\n";
+		send(fd_key, response.c_str(), response.length(), 0);
+	}
+	if (cmd == "USER jdutschk jdutschk localhost :Julien Dutschke\r\n")
+	{
+		std::string response = ":yourserver 002 jdutschk :Your host is yourserver, running version 1.0\r\n";
+		send(fd_key, response.c_str(), response.length(), 0);
+	}
+	if (cmd == "PING yourserver\r\n")
+	{
+		std::string response = "PONG yourserver\r\n";
+		send(fd_key, response.c_str(), response.length(), 0);
+	}
 }
 
-void Serveur::parsing_cmd(Client client, int fd_key)
+void Serveur::parsing_cmd(Client& client, int fd_key)
 {
 	int find_command = 0;
 
