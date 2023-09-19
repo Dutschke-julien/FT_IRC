@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/18 14:49:46 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/19 18:59:53 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class Serveur
 	
 	std::map <int, Client> _mapClients;
 	std::vector<int> _list_Clients_fd;
-	
+	std::vector<std::string> _name_used;
 	std::string _password;
 
 	int	_serverSocket_fd;
