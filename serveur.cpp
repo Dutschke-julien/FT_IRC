@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/18 15:17:15 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/19 17:46:29 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ void Serveur::print_cmd(std::string cmd, int fd_key)
 void Serveur::parsing_cmd(Client& client, int fd_key)
 {
 	int find_command = 0;
-
+	 
 	find_command = client.pack.cmd.find("\r\n");
 
 	while (find_command != -1)

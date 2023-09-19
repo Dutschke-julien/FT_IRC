@@ -25,6 +25,7 @@ CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 SOURCES =   main.cpp\
 			serveur.cpp\
 			client.cpp\
+			serveur_cmd.cpp \
 
 # Fichiers objets
 
