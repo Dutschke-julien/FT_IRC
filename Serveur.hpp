@@ -24,6 +24,7 @@
 # include <arpa/inet.h>
 # include <netinet/in.h>
 # include "client.hpp"
+# include "channel.hpp"
 # define MAX_CLIENTS 10
 
 
@@ -33,6 +34,15 @@ class Serveur
 	
 	std::map <int, Client> _mapClients;
 	std::vector<int> _list_Clients_fd;
+
+    struct s_list_cmd
+    {
+        std::string cmd;
+        void	(Serveur::*f)(void);
+    };
+    struct s_list_cmd _list_cmd[]
+
+    std::map<std::string, Channel> _listChannel;
 	std::vector<std::string> _name_used;
 	std::string _password;
 
@@ -43,12 +53,13 @@ class Serveur
 	Serveur(int port, char *password);
 	~Serveur();
 
+
+    void set_list_command();
 	void set_port(int pt);
 	int get_port();
 	void set_password(std::string pass);
 	std::string get_password();
-	
-	
+
 	void print_cmd(std::string cmd, int fd_key);
 	void parsing_cmd(Client& client, int fd_key);
 	void Make_Sets_Sockets(fd_set& Sets_Sockets);

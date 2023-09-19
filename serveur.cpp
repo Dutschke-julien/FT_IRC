@@ -131,21 +131,22 @@ void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets
 
 void Serveur::print_cmd(std::string cmd, int fd_key)
 {
-	std::cout << "le client [" << fd_key << "] a envoyer la cmd suivante : " << cmd << std::endl;
-
+    if (cmd != "PING yourserver\r\n") {
+        std::cout << "le client [" << fd_key << "] a envoyer la cmd suivante : " << cmd << std::endl;
+    }
 	if (cmd == "CAP LS 302\r\n")
 	{
 		std::string response = "CAP * LS :\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
-	if (cmd == "NICK jdutschk\r\n")
+	if (cmd == "NICK aho\r\n")
 	{
-		std::string response = ":yourserver 001 jdutschk :Welcome to the IRC Server jdutschk!@localhost\r\n";
+		std::string response = ":yourserver 001 aho :Welcome to the IRC Server aho!@localhost\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
-	if (cmd == "USER jdutschk jdutschk localhost :Julien Dutschke\r\n")
+	if (cmd == "USER aho aho localhost :aho aho\r\n")
 	{
-		std::string response = ":yourserver 002 jdutschk :Your host is yourserver, running version 1.0\r\n";
+		std::string response = ":yourserver 002 aho :Your host is yourserver, running version 1.0\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
 	if (cmd == "PING yourserver\r\n")
@@ -153,6 +154,16 @@ void Serveur::print_cmd(std::string cmd, int fd_key)
 		std::string response = "PONG yourserver\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
+    if (cmd != "PING yourserver\r\n") {
+        std::string::const_iterator start_it;
+        std::string word;
+        start_it = cmd.cbegin();
+        while (*start_it != ' ' && start_it != cmd.cend() && *start_it != '\r' && *start_it != '\n') {
+            word += *start_it;
+            start_it++;
+        }
+        word += '\0';
+    }
 }
 
 void Serveur::parsing_cmd(Client& client, int fd_key)
@@ -242,4 +253,8 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
                 }
             }
         }
+}
+
+void Serveur::set_list_command() {
+
 }
