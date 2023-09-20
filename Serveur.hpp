@@ -13,6 +13,9 @@
 #ifndef SERVEUR_HPP
 # define SERVEUR_HPP
 
+#include<iostream>
+#include<iterator>
+#include<vector>
 # include <stdio.h>
 # include <iostream>
 # include <stdlib.h>
@@ -28,6 +31,8 @@
 # define MAX_CLIENTS 10
 
 
+typedef struct
+
 class Serveur
 {
 	private:
@@ -38,9 +43,9 @@ class Serveur
     struct s_list_cmd
     {
         std::string cmd;
-        void	(Serveur::*f)(void);
+        void	(Serveur::*f)(std::string);
     };
-    struct s_list_cmd _list_cmd[]
+    struct s_list_cmd _list_cmd[10];
 
     std::map<std::string, Channel> _listChannel;
 	std::vector<std::string> _name_used;
