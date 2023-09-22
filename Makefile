@@ -26,6 +26,8 @@ SOURCES =   main.cpp\
 			serveur.cpp\
 			client.cpp\
 			serveur_cmd.cpp \
+			channel_cmd.cpp \
+			channel.cpp \
 
 # Fichiers objets
 
