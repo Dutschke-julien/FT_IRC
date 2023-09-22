@@ -94,8 +94,6 @@ void Serveur::deconnect_client(std::vector<int>& list_Clients_fd, int i)
 	list_Clients_fd[i] = 0;
 }
 
-
-
 void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets_Sockets)
 {
 	char message[1024];
@@ -157,8 +155,10 @@ void Serveur::print_cmd(std::string cmd, int fd_key)
 	}
 	word += '\0';
 	for (int i = 0; i < 10; ++i) {
-		if (word == _list_cmd[i].cmd)
-			(this->*_list_cmd[i].f)(cmd);
+		if (word == _list_cmd[i].cmd) {
+			cmd.erase(cmd.cbegin(), start_it);
+			(this->*_list_cmd[i].f)(cmd, fd_key);
+		}
 	}
 }
 
@@ -254,6 +254,7 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
 
 void Serveur::set_list_command() {
 	this->_list_cmd[0].cmd = "JOIN";
+	this->_list_cmd[0].f = &this->cmd_join;
 	this->_list_cmd[1].cmd = "NICK";
 	this->_list_cmd[2].cmd = "PRVMSG";
 	this->_list_cmd[3].cmd = "USER";

@@ -12,17 +12,18 @@ class Channel {
 private:
     int mode;
 
-    std::list<std::string> _full_list;
-    std::list<std::string> _oper;
-    std::list<std::string> _regular_client;
-    std::list<std::string> _ban;
+    std::list<int> _full_list;
+	std::list<int> _oper;
+	std::list<int> _regular_client;
+	std::list<int> _ban;
 
 public:
-    explicit Channel(std::string name_oper);
+    Channel(int fd_oper);
+	Channel();
     ~Channel();
 
     void set_mode();
-    void add_client();
+    void add_client(int fd_key);
     void add_client_ban();
     void remove_client();
 };

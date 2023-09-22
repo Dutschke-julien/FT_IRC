@@ -43,7 +43,7 @@ class Serveur
     struct s_list_cmd
     {
         std::string cmd;
-        void	(Serveur::*f)(std::string);
+        void	(Serveur::*f)(std::string, int);
     };
     struct s_list_cmd _list_cmd[10];
 
@@ -73,6 +73,8 @@ class Serveur
 	void execute_message(int fd_key, char *message);
 	void deconnect_client(std::vector<int>& list_Clients_fd, int i);
 	void add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::vector<int>& list_Clients_fd);
+
+	void cmd_join(std::string string, int fd_key);
 };
 
 
