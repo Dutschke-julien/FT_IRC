@@ -12,25 +12,32 @@
 
 #include "Serveur.hpp"
 
-Serveur::cmd_Nick(std::string cmd, int fd_key)
+void Serveur::cmd_Nick(std::string cmd, int fd_key)
 {
-//	std::string name = cmd.erase(0, 5);
-    
-    if (name.find_first_of("#@!:%&*,._- ") != std::string::npos)
-        std::cout << "Error Wrong caract found\n"; // Error a changer
-    else if ((name.length() - 2) > 9 )
-        std::cout << "Error too much caract only 9\n"; //Error a changer
-	
-	std::vector<std::string>::iterator it = _name_used.begin();
-	
-	while (it != _name_used.end())
-	{
-		if (it == name || name == _name_used.end())
-			std::cout << "Error Nick already taken\n";
-		it++;
-	}
-	_name_used.push_back(name);
-	_list_Client_fd[fd_key].set_nickname(name);
-	
-	//message de validation a envoyer au clients 
+    // Supprime les caractères de fin de ligne ("\r\n") de la commande
+    cmd.erase(cmd.find_last_not_of("\r\n") + 1);
+
+    // Extrait le pseudonyme de la commande
+    std::string pseudonyme = cmd.substr(5);  // Supprime les 5 premiers caractères ("NICK ")
+
+    // Vérifie si le pseudonyme est vide
+    if (pseudonyme.empty())
+    {
+        // Pseudonyme manquant, envoie un message d'erreur
+        std::string erreur = ":server_name 431 * :Pseudonyme manquant. Utilisation : /NICK <pseudonyme>\r\n";
+        send(fd_key, erreur.c_str(), erreur.length(), 0);
+    }
+    else if (pseudonyme.find_first_of("#@!:%&*,._- ") != std::string::npos)
+    {
+        // Caractères non autorisés dans le pseudonyme, envoie un message d'erreur
+        std::string erreur = ":server_name 432 * :Caractères non autorisés dans le pseudonyme\r\n";
+        send(fd_key, erreur.c_str(), erreur.length(), 0);
+    }
+    else
+    {
+        // Pseudonyme valide, envoie un message de bienvenue
+        std::string bienvenue = ":server_name 001 " + pseudonyme + " :Bienvenue sur le serveur IRC\r\n";
+        send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
+    }
 }
+
