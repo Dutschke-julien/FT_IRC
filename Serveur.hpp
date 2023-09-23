@@ -31,8 +31,6 @@
 # define MAX_CLIENTS 10
 
 
-typedef struct
-
 class Serveur
 {
 	private:
@@ -75,6 +73,7 @@ class Serveur
 	void add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::vector<int>& list_Clients_fd);
 
 	void cmd_join(std::string string, int fd_key);
+	void cmd_Nick(std::string cmd, int fd_key);
 };
 
 

@@ -52,7 +52,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 		while (!(isalnum(*it)) && it != string.end()) {
 			it++;
 		}
-		channel_name = string.substr(0, (std::distance(string.cbegin(), it) - 1));
+		channel_name = string.substr(0, (std::distance(string.begin(), it) - 1));
 		string.erase(string.begin(), it);
 		if (!(*it == ' ' || *it == '#') && isprint(*it)) {
 			error = ":IRC * 476:Bad channel mask";
@@ -74,8 +74,8 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 				stat_pass = 2;
 			} else if (stat_pass == 2 && (*it == ' ' || !(isprint(*it)))) {
 				pass_end_it = it;
-				password = string.substr((std::distance(string.cbegin(), pass_it)) - 1,
-				                         (std::distance(string.cbegin(), pass_end_it) - 1));
+				password = string.substr((std::distance(string.begin(), pass_it)) - 1,
+				                         (std::distance(string.begin(), pass_end_it) - 1));
 				string.erase(pass_it, pass_end_it);
 				break;
 			}
@@ -95,15 +95,19 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 			} else {
 				index_code_error = _listChannel[channel_name].add_client(fd_key);
 				switch (index_code_error) {
-					default:
-						error = ":IRC * 400:Unexpected error from a /Join command";
-						send(fd_key, error.c_str(), error.length(), 0);
 					case -1:
 						error = ":IRC * 474:You are banned from this channel";
 						send(fd_key, error.c_str(), error.length(), 0);
+						break;
 					case -2:
 						error = ":IRC * 474:You are already registered in this channel";
 						send(fd_key, error.c_str(), error.length(), 0);
+						break;
+					default:
+						error = ":IRC * 400:Unexpected error from a /Join command";
+						send(fd_key, error.c_str(), error.length(), 0);
+						break;
+
 				}
 			}
 		} else {

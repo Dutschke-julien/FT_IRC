@@ -26,18 +26,18 @@ Channel::Channel(int fd_oper, std::string pass) {
 }
 
 int Channel::set_mode() {
-
+	return 0;
 }
 
 int Channel::add_client(int fd_key) {
-	for (std::list<int>::const_iterator it_find = _ban.cbegin();
-	it_find != _ban.cend(); it_find++) {
+	for (std::list<int>::const_iterator it_find = _ban.begin();
+	it_find != _ban.end(); it_find++) {
 		if (*it_find == fd_key)
 			return -1;
 	}
-	for (std::list<int>::const_iterator it = _full_list.cbegin();
-	     it != _full_list.cend(); it++) {
-		if (*it_find == fd_key)
+	for (std::list<int>::const_iterator it = _full_list.begin();
+	     it != _full_list.end(); it++) {
+		if (*it == fd_key)
 			return -2;
 	}
 	_full_list.push_back(fd_key);
@@ -51,9 +51,9 @@ int Channel::verif_pass(std::string pass) {
 }
 
 int Channel::add_client_ban() {
-
+	return 0;
 }
 
 int Channel::remove_client() {
-
+	return 0;
 }

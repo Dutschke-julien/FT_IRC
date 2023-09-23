@@ -123,8 +123,9 @@ void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets
 
 void Serveur::print_cmd(std::string cmd, int fd_key)
 {
-	std::string::const_iterator start_it;
+	std::string::iterator start_it;
 	std::string word;
+
     if (cmd != "PING yourserver\r\n") {
         std::cout << "le client [" << fd_key << "] a envoyer la cmd suivante : " << cmd << std::endl;
     }
@@ -148,15 +149,15 @@ void Serveur::print_cmd(std::string cmd, int fd_key)
 		std::string response = "PONG yourserver\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
-	start_it = cmd.cbegin();
-	while (*start_it != ' ' && start_it != cmd.cend() && *start_it != '\r' && *start_it != '\n') {
+	start_it = cmd.begin();
+	while (*start_it != ' ' && start_it != cmd.end() && *start_it != '\r' && *start_it != '\n') {
 		word += *start_it;
 		start_it++;
 	}
 	word += '\0';
 	for (int i = 0; i < 10; ++i) {
 		if (word == _list_cmd[i].cmd) {
-			cmd.erase(cmd.cbegin(), start_it);
+			cmd.erase(cmd.begin(), start_it);
 			(this->*_list_cmd[i].f)(cmd, fd_key);
 		}
 	}
@@ -254,7 +255,7 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
 
 void Serveur::set_list_command() {
 	this->_list_cmd[0].cmd = "JOIN";
-	this->_list_cmd[0].f = &this->cmd_join;
+	this->_list_cmd[0].f = &Serveur::cmd_join;
 	this->_list_cmd[1].cmd = "NICK";
 	this->_list_cmd[2].cmd = "PRVMSG";
 	this->_list_cmd[3].cmd = "USER";
