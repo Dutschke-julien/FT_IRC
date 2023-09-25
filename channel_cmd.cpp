@@ -29,8 +29,6 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 	 * if that's the case, I should remove it to parse easier the rest of the code with .erase
 	 */
 
-    std::cout << "entering command JOIN\n";
-
 	while (*it == ' ') {
 		string.erase(it);
 		it++;
@@ -39,15 +37,17 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 		it++;
 		if (*it == '\n') {
             std::cout << "send : not enough parameters\n";
-			error = ":IRC * 461:Not enough parameters";
+			error = ":yourserver . 461:Not enough parameters\r\n";
 			send(fd_key, error.c_str(), error.length(), 0);
 			return;
 		}
 		string.erase(string.begin(), it);
 	}
+    std::cout << *it << " == it\n";
+    std::cout << "entering command JOIN\n" << string << " == string\n";
 	if (*it != '#') {
         std::cout << "send : no channel found\n";
-		error = ":IRC * 476: no channel found";
+		error = ":lol : no channel found\r\n";
 		send(fd_key, error.c_str(), error.length(), 0);
 		return;
 	}
@@ -68,7 +68,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 		string.erase(string.begin(), it);
 		if (!(*it == ' ' || *it == '#') && isprint(*it)) {
             std::cout << "send : bad channel mask\n";
-			error = ":IRC * 476:Bad channel mask";
+			error = ":yourserver . 403:Bad channel mask\r\n";
 			send(fd_key, error.c_str(), error.length(), 0);
 			return;
 		}
@@ -104,24 +104,24 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 				index_code_error = _listChannel[channel_name].verif_pass(password);
 			if (index_code_error == -3) {
                 std::cout << "send : pass wrong\n";
-				error = ":IRC * 475:Cannot join channel (pass)";
+				error = ":yourserver . 475:Cannot join channel (pass)\r\n";
 				send(fd_key, error.c_str(), error.length(), 0);
 			} else {
 				index_code_error = _listChannel[channel_name].add_client(fd_key);
 				switch (index_code_error) {
 					case -1:
                         std::cout << "send : banned\n";
-						error = ":IRC * 474:You are banned from this channel";
+						error = ":yourserver . 474:You are banned from this channel\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 					case -2:
                         std::cout << "send : already registered\n";
-						error = ":IRC * 474:You are already registered in this channel";
+						error = ":yourserver . 474:You are already registered in this channel\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 					default:
                         std::cout << "send : default\n";
-						error = ":IRC * 400:Unexpected error from a /Join command";
+						error = ":yourserver . 400:Unexpected error from a /Join command\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 

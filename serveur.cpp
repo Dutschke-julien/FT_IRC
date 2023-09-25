@@ -163,7 +163,7 @@ void Serveur::commun_cmd(std::string cmd, int fd_key) {
             std::string response = "PONG 42Mulhouse\r\n";
             send(fd_key, response.c_str(), response.length(), 0);
         }
-		
+
     start_it = cmd.begin();
     while (*start_it != ' ' && start_it != cmd.end() && *start_it != '\r' && *start_it != '\n') {
         word += *start_it;
@@ -195,6 +195,7 @@ void Serveur::commun_cmd(std::string cmd, int fd_key) {
     for (int i = 0; i < 10; ++i) {
         if (word == _list_cmd[i].cmd) {
             cmd.erase(cmd.begin(), start_it);
+//            std::cout << cmd << " === cmd after erase "<< std::endl;
             (this->*_list_cmd[i].f)(cmd, fd_key);
         }
     }
