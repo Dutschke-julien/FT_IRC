@@ -6,12 +6,26 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:02:42 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/25 17:11:15 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/25 18:32:04 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Serveur.hpp"
+void del_Nick_toks(std::vector<std::string>& nameVector, std::string Nick)
+{
+	std::vector<std::string>::iterator it = nameVector.begin();
 
+	while (it != nameVector.end())
+	{
+		if (*it == Nick)
+		{
+			nameVector.erase(it);
+			break;
+		}
+		else
+			it++;
+	}
+}
 bool isNickTaken(const std::vector<std::string>& nameVector, const std::string& newNick) 
 {
     for (std::vector<std::string>::const_iterator it = nameVector.begin(); it != nameVector.end(); ++it) 
@@ -31,8 +45,13 @@ void Serveur::cmd_tmp(std::string string, int fd_key) {
 void Serveur::cmd_Nick(std::string cmd, int fd_key)
 {
     // Supprime les caractères de fin de ligne ("\r\n") de la commande
+	
     std::string pseudonyme = cmd.erase(cmd.find_last_not_of("\r\n") + 1);
 
+	for (std::string::iterator it = pseudonyme.begin(); *it == ' '; it++)
+	{
+		pseudonyme.erase(it);
+	}
     // Vérifie si le pseudonyme est vide
     if (pseudonyme.empty())
     {
@@ -44,6 +63,7 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
     {
         // Caractères non autorisés dans le pseudonyme, envoie un message d'erreur
         std::string erreur = ":server_name 432 * :Caractères non autorisés dans le pseudonyme\r\n";
+		std::cout << "voici la chaine [" << pseudonyme << "]" << std::endl;
         send(fd_key, erreur.c_str(), erreur.length(), 0);
     }
 	else if (isNickTaken(_name_used, pseudonyme) == true)
@@ -57,6 +77,8 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
         std::string bienvenue = ":server_name 001 " + pseudonyme + " :Bienvenue sur le serveur IRC\r\n";
         send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
 		_name_used.push_back(pseudonyme);
+		del_Nick_toks(_name_used, _mapClients[fd_key].get_nickname());
 		_mapClients[fd_key].set_nickname(pseudonyme);
     }
 }
+ 
