@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:02:42 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/25 16:49:56 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/25 17:11:15 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void Serveur::cmd_tmp(std::string string, int fd_key) {
 void Serveur::cmd_Nick(std::string cmd, int fd_key)
 {
     // Supprime les caractères de fin de ligne ("\r\n") de la commande
-    cmd.erase(cmd.find_last_not_of("\r\n") + 1);
+    std::string pseudonyme = cmd.erase(cmd.find_last_not_of("\r\n") + 1);
 
     // Vérifie si le pseudonyme est vide
     if (pseudonyme.empty())
@@ -60,5 +60,3 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
 		_mapClients[fd_key].set_nickname(pseudonyme);
     }
 }
-
-`

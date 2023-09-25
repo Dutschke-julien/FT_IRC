@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/25 15:42:39 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/25 17:17:02 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,17 +131,17 @@ void Serveur::print_cmd(std::string cmd, int fd_key)
 		std::string response = "CAP * LS :\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
-	if (cmd == "NICK aho\r\n")
+	if (cmd == "NICK jdutschk\r\n")
 	{
-		std::string response = ":42Mulhouse 001 aho :Welcome to the IRC Server aho!@localhost\r\n";
+		std::string response = ":42Mulhouse 001 jdutschk :Welcome to the IRC Server jdutschk!@localhost\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
-	if (cmd == "USER aho aho localhost :aho aho\r\n")
+	if (cmd == "USER jdutschk jdutschk localhost :jdutschk jdutschk\r\n")
 	{
-		std::string response = ":42Mulhouse 002 aho :Your host is yourserver, running version 1.0\r\n";
+		std::string response = ":42Mulhouse 002 jdutschk :Your host is yourserver, running version 1.0\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
-    if (cmd == "MODE aho +i\r\n")
+    if (cmd == "MODE jdutschk +i\r\n")
     {
         std::cout << "index connection\n\n";
         set_index_connexion(1);
