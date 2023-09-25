@@ -140,8 +140,12 @@ void Serveur::print_cmd(std::string cmd, int fd_key)
 	{
 		std::string response = ":yourserver 002 aho :Your host is yourserver, running version 1.0\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
-        set_index_connexion(1);
 	}
+    if (cmd == "MODE aho +i\r\n")
+    {
+        std::cout << "index connection\n\n";
+        set_index_connexion(1);
+    }
 	if (cmd == "PING yourserver\r\n")
 	{
 		std::string response = "PONG yourserver\r\n";
@@ -155,10 +159,11 @@ void Serveur::commun_cmd(std::string cmd, int fd_key) {
     std::string word;
 
 
-    if (cmd == "PING yourserver\r\n")
-    {
-        std::string response = "PONG yourserver\r\n";
-        send(fd_key, response.c_str(), response.length(), 0);
+    if (cmd != "PING yourserver\r\n") {
+        if (cmd == "PING yourserver\r\n") {
+            std::string response = "PONG yourserver\r\n";
+            send(fd_key, response.c_str(), response.length(), 0);
+        }
     }
     start_it = cmd.begin();
     while (*start_it != ' ' && start_it != cmd.end() && *start_it != '\r' && *start_it != '\n') {
@@ -169,20 +174,20 @@ void Serveur::commun_cmd(std::string cmd, int fd_key) {
     /*
      * portion of code to know what the difference between word and the command
     */
-
-    for (std::string::iterator verif = word.begin(); verif != word.end() ; verif++) {
-        std::cout << *verif << "-"<< std::endl;
-    }
-    std::cout << "end of word\n";
-
-    for (std::string::iterator verif = _list_cmd[0].cmd.begin(); verif != _list_cmd[0].cmd.end() ; verif++) {
-        std::cout << *verif << "-"<< std::endl;
-    }
-    std::cout << "end of command\n";
-
-    std::cout << word << " == " << _list_cmd[0].cmd << std::endl;
-    if (word == _list_cmd[0].cmd)
-        std::cout << "HERE\n";
+//
+//    for (std::string::iterator verif = word.begin(); verif != word.end() ; verif++) {
+//        std::cout << *verif << "-"<< std::endl;
+//    }
+//    std::cout << "end of word\n";
+//
+//    for (std::string::iterator verif = _list_cmd[0].cmd.begin(); verif != _list_cmd[0].cmd.end() ; verif++) {
+//        std::cout << *verif << "-"<< std::endl;
+//    }
+//    std::cout << "end of command\n";
+//
+//    std::cout << word << " == " << _list_cmd[0].cmd << std::endl;
+//    if (word == _list_cmd[0].cmd)
+//        std::cout << "HERE\n";
 
     /*
      * verification's end
