@@ -4,6 +4,14 @@
 
 #include "Serveur.hpp"
 
+void Serveur::set_index_connexion(int index) {
+    _index_connection = index;
+}
+
+int Serveur::get_index_connexion() {
+    return _index_connection;
+}
+
 void Serveur::cmd_join(std::string string, int fd_key) {
 	std::string::iterator it = string.begin();
 	std::string::iterator pass_it;
@@ -21,6 +29,8 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 	 * if that's the case, I should remove it to parse easier the rest of the code with .erase
 	 */
 
+    std::cout << "entering command JOIN\n";
+
 	while (*it == ' ') {
 		string.erase(it);
 		it++;
@@ -28,6 +38,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 	if (*it == '\r') {
 		it++;
 		if (*it == '\n') {
+            std::cout << "send : not enough parameters\n";
 			error = ":IRC * 461:Not enough parameters";
 			send(fd_key, error.c_str(), error.length(), 0);
 			return;
@@ -35,6 +46,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 		string.erase(string.begin(), it);
 	}
 	if (*it != '#') {
+        std::cout << "send : no channel found\n";
 		error = ":IRC * 476: no channel found";
 		send(fd_key, error.c_str(), error.length(), 0);
 		return;
@@ -55,6 +67,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 		channel_name = string.substr(0, (std::distance(string.begin(), it) - 1));
 		string.erase(string.begin(), it);
 		if (!(*it == ' ' || *it == '#') && isprint(*it)) {
+            std::cout << "send : bad channel mask\n";
 			error = ":IRC * 476:Bad channel mask";
 			send(fd_key, error.c_str(), error.length(), 0);
 			return;
@@ -67,7 +80,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 		while (it != string.end()) {
 			if (*it == ' ' && stat_pass == 0)
 				stat_pass = 1;
-			else if (stat_pass == '#' && *it == 1)
+			else if (*it == '#' && stat_pass == 1)
 				stat_pass = 0;
 			else if (stat_pass == 1 && *it != ' ') {
 				pass_it = it;
@@ -90,20 +103,24 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 			if (it != string.end())
 				index_code_error = _listChannel[channel_name].verif_pass(password);
 			if (index_code_error == -3) {
+                std::cout << "send : pass wrong\n";
 				error = ":IRC * 475:Cannot join channel (pass)";
 				send(fd_key, error.c_str(), error.length(), 0);
 			} else {
 				index_code_error = _listChannel[channel_name].add_client(fd_key);
 				switch (index_code_error) {
 					case -1:
+                        std::cout << "send : banned\n";
 						error = ":IRC * 474:You are banned from this channel";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 					case -2:
+                        std::cout << "send : already registered\n";
 						error = ":IRC * 474:You are already registered in this channel";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 					default:
+                        std::cout << "send : default\n";
 						error = ":IRC * 400:Unexpected error from a /Join command";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;

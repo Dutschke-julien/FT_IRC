@@ -38,19 +38,20 @@ class Serveur
 	std::map <int, Client> _mapClients;
 	std::vector<int> _list_Clients_fd;
 
-    struct s_list_cmd
+    struct s_list_cmd // structure of the array of pointers to store commands
     {
         std::string cmd;
         void	(Serveur::*f)(std::string, int);
     };
-    struct s_list_cmd _list_cmd[10];
+    struct s_list_cmd _list_cmd[10]; // the array
 
-    std::map<std::string, Channel> _listChannel;
+    std::map<std::string, Channel> _listChannel; // map which contains channels, see the file channel.hpp
 	std::vector<std::string> _name_used;
 	std::string _password;
 
 	int	_serverSocket_fd;
 	int _port;
+	int _index_connection; // act as switch to differentiate command such as NICK, JOIN, USER from the /connect and the user
 
 	public:
 	Serveur(int port, char *password);
@@ -72,10 +73,14 @@ class Serveur
 	void deconnect_client(std::vector<int>& list_Clients_fd, int i);
 	void add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::vector<int>& list_Clients_fd);
 
-	void cmd_join(std::string string, int fd_key);
 	void cmd_Nick(std::string cmd, int fd_key);
+
+	void	set_index_connexion(int index); // setter for connection's index
+	int		get_index_connexion(); // getter
+	void commun_cmd(std::string cmd, int fd_key); // function which will redirect the string to our command
+	void cmd_tmp(std::string string, int fd_key); // temporary command to fill my array with an address
+	void cmd_join(std::string string, int fd_key); // function Join
+
 };
-
-
 
 #endif

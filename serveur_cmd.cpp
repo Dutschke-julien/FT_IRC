@@ -12,6 +12,10 @@
 
 #include "Serveur.hpp"
 
+void Serveur::cmd_tmp(std::string string, int fd_key) {
+    std::cout << string << " fd = " << fd_key << std::endl;
+}
+
 void Serveur::cmd_Nick(std::string cmd, int fd_key)
 {
     // Supprime les caractères de fin de ligne ("\r\n") de la commande
