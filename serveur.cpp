@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/25 14:51:20 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/25 15:42:39 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets
 
 void Serveur::print_cmd(std::string cmd, int fd_key)
 {
-    if (cmd != "PING yourserver\r\n") {
+    if (cmd != "PING 42Mulhouse\r\n") {
         std::cout << "le client [" << fd_key << "] a envoyer la cmd suivante : " << cmd << std::endl;
     }
 	if (cmd == "CAP LS 302\r\n")
@@ -133,12 +133,12 @@ void Serveur::print_cmd(std::string cmd, int fd_key)
 	}
 	if (cmd == "NICK aho\r\n")
 	{
-		std::string response = ":yourserver 001 aho :Welcome to the IRC Server aho!@localhost\r\n";
+		std::string response = ":42Mulhouse 001 aho :Welcome to the IRC Server aho!@localhost\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
 	if (cmd == "USER aho aho localhost :aho aho\r\n")
 	{
-		std::string response = ":yourserver 002 aho :Your host is yourserver, running version 1.0\r\n";
+		std::string response = ":42Mulhouse 002 aho :Your host is yourserver, running version 1.0\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
     if (cmd == "MODE aho +i\r\n")
@@ -146,9 +146,9 @@ void Serveur::print_cmd(std::string cmd, int fd_key)
         std::cout << "index connection\n\n";
         set_index_connexion(1);
     }
-	if (cmd == "PING yourserver\r\n")
+	if (cmd == "PING 42Mulhouse\r\n")
 	{
-		std::string response = "PONG yourserver\r\n";
+		std::string response = ":PONG 42Mulhouse\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
 }
@@ -159,12 +159,11 @@ void Serveur::commun_cmd(std::string cmd, int fd_key) {
     std::string word;
 
 
-    if (cmd != "PING yourserver\r\n") {
-        if (cmd == "PING yourserver\r\n") {
-            std::string response = "PONG yourserver\r\n";
+        if (cmd == "PING 42Mulhouse\r\n") {
+            std::string response = "PONG 42Mulhouse\r\n";
             send(fd_key, response.c_str(), response.length(), 0);
         }
-    }
+		
     start_it = cmd.begin();
     while (*start_it != ' ' && start_it != cmd.end() && *start_it != '\r' && *start_it != '\n') {
         word += *start_it;
@@ -299,7 +298,7 @@ void Serveur::set_list_command() {
 	this->_list_cmd[0].cmd = "JOIN";
 	this->_list_cmd[0].f = &Serveur::cmd_join;
 	this->_list_cmd[1].cmd = "NICK";
-    this->_list_cmd[1].f = &Serveur::cmd_tmp;
+    this->_list_cmd[1].f = &Serveur::cmd_Nick;
     this->_list_cmd[2].cmd = "PRVMSG";
     this->_list_cmd[2].f = &Serveur::cmd_tmp;
     this->_list_cmd[3].cmd = "USER";
