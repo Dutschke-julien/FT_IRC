@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:02:42 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/25 16:48:58 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/25 16:49:56 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,6 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
 {
     // Supprime les caractères de fin de ligne ("\r\n") de la commande
     cmd.erase(cmd.find_last_not_of("\r\n") + 1);
-
-    // Extrait le pseudonyme de la commande
-    std::string pseudonyme = cmd.substr(5);  // Supprime les 5 premiers caractères ("NICK ")
 
     // Vérifie si le pseudonyme est vide
     if (pseudonyme.empty())
