@@ -13,9 +13,8 @@
 #ifndef SERVEUR_HPP
 # define SERVEUR_HPP
 
-#include<iostream>
-#include<iterator>
-#include<vector>
+# include<iostream>
+# include<iterator>
 # include <stdio.h>
 # include <iostream>
 # include <stdlib.h>
