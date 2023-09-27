@@ -44,10 +44,16 @@ int Channel::add_client(int fd_key) {
 	return 0;
 }
 
-int Channel::verif_pass(std::string pass) {
-	if (pass != _pass)
-		return (-3);
-	return (0);
+int Channel::add_client(int fd_key, std::string pass) {
+	if (!(_pass.empty())) {
+		if (pass != _pass)
+			return (-3);
+		else {
+			add_client(fd_key);
+			return 2;
+		}
+	}
+	return (add_client(fd_key));
 }
 
 int Channel::add_client_ban() {

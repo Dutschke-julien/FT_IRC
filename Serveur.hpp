@@ -83,6 +83,7 @@ class Serveur
 	void commun_cmd(std::string cmd, int fd_key); // function which will redirect the string to our command
 	void cmd_tmp(std::string string, int fd_key); // temporary command to fill my array with an address
 	void cmd_join(std::string string, int fd_key); // function Join
+	int verif_name(std::string name); //verification if the channel already exit
 
 };
 
