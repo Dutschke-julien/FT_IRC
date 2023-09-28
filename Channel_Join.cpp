@@ -2,20 +2,6 @@
 // Created by Antoine Ho on 9/26/23.
 //
 
-# include<iostream>
-# include<iterator>
-# include <stdio.h>
-# include <iostream>
-# include <stdlib.h>
-# include <string>
-# include <map>
-# include <vector>
-# include <unistd.h>
-# include <cstring>
-# include <arpa/inet.h>
-# include <netinet/in.h>
-# include "client.hpp"
-# include "channel.hpp"
 #include "Serveur.hpp"
 
 void Serveur::cmd_join(std::string string, int fd_key) {
@@ -34,6 +20,37 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 	while (*del_space == ' '){
 		string.erase(del_space);
 	}
+    if (string == "#test\r\n") {
+        std::cout << "test\n";
+        error = ":yourserver 475 aho #test :Cannot join channel(wrong key)\r\n";
+        send(fd_key, error.c_str(), error.length(), 0);
+        return;
+    }
+    if (string == "#test2\r\n") {
+        std::cout << "test2\n";
+        error = ":yourserver 403 aho : bad channel mask\r\n";
+        send(fd_key, error.c_str(), error.length(), 0);
+        return;
+    }
+    if (string == "#test3\r\n") {
+        std::cout << "test3\n";
+        error = ":yourserver 461 aho : not enough parameters\r\n";
+        send(fd_key, error.c_str(), error.length(), 0);
+        return;
+    }
+    if (string == "#test4\r\n") {
+        std::cout << "test4\n";
+        error = ":yourserver 474 aho #test4 :You are banned from this channel\r\n";
+        send(fd_key, error.c_str(), error.length(), 0);
+        return;
+    }
+    if (string == "#test5\r\n") {
+        std::cout << "test5\n";
+        error = ":yourserver 400 aho #test5 :Unexpected error from a /Join command\r\n";
+        send(fd_key, error.c_str(), error.length(), 0);
+        return;
+    }
+
     string.erase(string.find_last_of('\n'), 1);
     string.erase(string.find_last_of('\r'), 1);
 
@@ -89,7 +106,11 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 		it_firstchannel = list_channel.begin();
 		while (it_firstchannel != list_channel.end()) {
 			if (verif_name(*it_firstchannel) == 1) {
-				ret_status = _listChannel[*it_firstchannel].add_client(fd_key, *(list_key.begin()));
+                if (list_key.empty())
+                    ret_status = -3;
+                else {
+                    ret_status = _listChannel[*it_firstchannel].add_client(fd_key, *(list_key.begin()));
+                }
 				switch (ret_status) {
 					case -1:
                         std::cout << "send : banned\n";
@@ -101,7 +122,8 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 						break;
 					case -3:
 						std::cout << "send : wrong key\n";
-						error = ":yourserver 475 aho #lol:Cannot join channel (wrong key)\r\n";
+                        error = ":yourserver 475 aho #" + *it_firstchannel + ":Cannot join channel(wrong key)\r\n";
+                        std::cout << error << " = error created\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 					case 2:

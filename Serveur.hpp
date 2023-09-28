@@ -80,10 +80,11 @@ class Serveur
 
 	void	set_index_connexion(int index); // setter for connection's index
 	int		get_index_connexion(); // getter
-	void commun_cmd(std::string cmd, int fd_key); // function which will redirect the string to our command
-	void cmd_tmp(std::string string, int fd_key); // temporary command to fill my array with an address
-	void cmd_join(std::string string, int fd_key); // function Join
-	int verif_name(std::string name); //verification if the channel already exit
+	void    commun_cmd(std::string cmd, int fd_key); // function which will redirect the string to our command
+	void    cmd_tmp(std::string string, int fd_key); // temporary command to fill my array with an address
+	void    cmd_join(std::string string, int fd_key); // function Join
+	int     verif_name(std::string name); //verification if the channel already exit
+//    std::string join_get_error(std::string server, std::string nbr, std::string nick, std::string channel, std::string message); //function to return the numerical error for the clients
 
 };
 

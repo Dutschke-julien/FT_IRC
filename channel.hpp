@@ -7,6 +7,7 @@
 
 #include <list>
 #include <string>
+#include <iostream>
 
 class Channel {
 private:

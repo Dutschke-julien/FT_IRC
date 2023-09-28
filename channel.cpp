@@ -30,26 +30,36 @@ int Channel::set_mode() {
 }
 
 int Channel::add_client(int fd_key) {
+    std::cout << "entering add_client function\n";
 	for (std::list<int>::const_iterator it_find = _ban.begin();
 	it_find != _ban.end(); it_find++) {
-		if (*it_find == fd_key)
-			return -1;
+		if (*it_find == fd_key) {
+            std::cout << "exit add_client1 function\n";
+            return -1;
+        }
 	}
 	for (std::list<int>::const_iterator it = _full_list.begin();
 	     it != _full_list.end(); it++) {
-		if (*it == fd_key)
-			return -2;
+		if (*it == fd_key) {
+            std::cout << "exit add_client2 function\n";
+            return -2;
+        }
 	}
 	_full_list.push_back(fd_key);
+    std::cout << "exit add_client3 function\n";
 	return 0;
 }
 
 int Channel::add_client(int fd_key, std::string pass) {
+    std::cout << "entering add_client_pass function\n";
 	if (!(_pass.empty())) {
-		if (pass != _pass)
-			return (-3);
+		if (pass != _pass) {
+            std::cout << "exiting add_client_pass1 function\n";
+            return (-3);
+        }
 		else {
 			add_client(fd_key);
+            std::cout << "exiting add_client_pass2 function\n";
 			return 2;
 		}
 	}
