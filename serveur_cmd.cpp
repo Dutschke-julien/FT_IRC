@@ -6,11 +6,15 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:02:42 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/25 18:32:04 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/09/28 17:27:01 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Serveur.hpp"
+
+
+
+
 void del_Nick_toks(std::vector<std::string>& nameVector, std::string Nick)
 {
 	std::vector<std::string>::iterator it = nameVector.begin();
@@ -81,4 +85,3 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
 		_mapClients[fd_key].set_nickname(pseudonyme);
     }
 }
- 
