@@ -7,6 +7,7 @@
 
 #include <list>
 #include <string>
+#include <iostream>
 
 class Channel {
 private:
@@ -24,7 +25,7 @@ public:
 
     int set_mode();
     int add_client(int fd_key);
-	int verif_pass(std::string pass);
+	int add_client(int fd_key, std::string pass);
     int add_client_ban();
     int remove_client();
 };
