@@ -11,6 +11,43 @@
 /* ************************************************************************** */
 
 #include "Serveur.hpp"
+
+
+void Serveur::cmd_User(std::string cmd, int fd_key)
+{
+    // Supprime les caractères de fin de ligne ("\r\n") de la commande
+    cmd.erase(cmd.find_last_not_of("\r\n") + 1);
+
+    // Analyse la commande pour extraire les paramètres de l'utilisateur
+    std::istringstream iss(cmd);
+    std::string commande, username, hostname, servername, realname;
+    iss >> commande >> username >> hostname >> servername;
+
+    // Lecture du nom réel en tenant compte du délimiteur ":"
+    std::getline(iss, realname, ':');
+
+    // Vérifie si les paramètres sont manquants ou vides
+    if (username.empty() || hostname.empty() || servername.empty() || realname.empty())
+    {
+        // Paramètres manquants, envoie un message d'erreur
+        std::string erreur = ":server_name 461 * :Commande USER incorrecte. Utilisation : /USER <username> <hostname> <servername> :<realname>\r\n";
+        send(fd_key, erreur.c_str(), erreur.length(), 0);
+    }
+    else
+    {
+        // Paramètres valides, enregistre l'utilisateur (tu devras implémenter cette fonction)
+        //enregistrer_utilisateur(username, hostname, servername, realname);
+
+        // Envoie un message de bienvenue
+        std::string bienvenue = ":server_name 001 " + username + " :Bienvenue sur le serveur IRC\r\n";
+        send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
+    }
+}
+
+
+
+
+
 void del_Nick_toks(std::vector<std::string>& nameVector, std::string Nick)
 {
 	std::vector<std::string>::iterator it = nameVector.begin();
