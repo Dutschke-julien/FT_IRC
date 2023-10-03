@@ -20,36 +20,36 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 	while (*del_space == ' '){
 		string.erase(del_space);
 	}
-    if (string == "#test\r\n") {
-        std::cout << "test\n";
-        error = ":yourserver 475 aho #test :Cannot join channel(wrong key)\r\n";
-        send(fd_key, error.c_str(), error.length(), 0);
-        return;
-    }
-    if (string == "#test2\r\n") {
-        std::cout << "test2\n";
-        error = ":yourserver 403 aho : bad channel mask\r\n";
-        send(fd_key, error.c_str(), error.length(), 0);
-        return;
-    }
-    if (string == "#test3\r\n") {
-        std::cout << "test3\n";
-        error = ":yourserver 461 aho : not enough parameters\r\n";
-        send(fd_key, error.c_str(), error.length(), 0);
-        return;
-    }
-    if (string == "#test4\r\n") {
-        std::cout << "test4\n";
-        error = ":yourserver 474 aho #test4 :You are banned from this channel\r\n";
-        send(fd_key, error.c_str(), error.length(), 0);
-        return;
-    }
-    if (string == "#test5\r\n") {
-        std::cout << "test5\n";
-        error = ":yourserver 400 aho #test5 :Unexpected error from a /Join command\r\n";
-        send(fd_key, error.c_str(), error.length(), 0);
-        return;
-    }
+//    if (string == "#test\r\n") {
+//        std::cout << "test\n";
+//        error = ":yourserver 475 aho #test :Cannot join channel(wrong key)\r\n";
+//        send(fd_key, error.c_str(), error.length(), 0);
+//        return;
+//    }
+//    if (string == "#test2\r\n") {
+//        std::cout << "test2\n";
+//        error = ":yourserver 403 aho : bad channel mask\r\n";
+//        send(fd_key, error.c_str(), error.length(), 0);
+//        return;
+//    }
+//    if (string == "#test3\r\n") {
+//        std::cout << "test3\n";
+//        error = ":yourserver 461 aho : not enough parameters\r\n";
+//        send(fd_key, error.c_str(), error.length(), 0);
+//        return;
+//    }
+//    if (string == "#test4\r\n") {
+//        std::cout << "test4\n";
+//        error = ":yourserver 474 aho #test4 :You are banned from this channel\r\n";
+//        send(fd_key, error.c_str(), error.length(), 0);
+//        return;
+//    }
+//    if (string == "#test5\r\n") {
+//        std::cout << "test5\n";
+//        error = ":yourserver 400 aho #test5 :Unexpected error from a /Join command\r\n";
+//        send(fd_key, error.c_str(), error.length(), 0);
+//        return;
+//    }
 
     string.erase(string.find_last_of('\n'), 1);
     string.erase(string.find_last_of('\r'), 1);
@@ -62,14 +62,13 @@ void Serveur::cmd_join(std::string string, int fd_key) {
     }
     if (string.empty()) {
 	    std::cout << "send : not enough parameters (empty)" << std::endl;
-        error = ":yourserver 461 aho : not enough parameters\r\n";
+        error = ":yourserver 461 " + _mapClients[fd_key].get_nickname() + "/join : not enough parameters\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
         return;
     }
 	it = string.begin();
     if (*it != '#' && ++it != string.end()) {
-        std::cout << "send : bad channel mask (no channel name)" << std::endl;
-        error = ":yourserver 403 aho : bad channel mask\r\n";
+	    error = ":yourserver 461 " + _mapClients[fd_key].get_nickname() + "/join : not enough parameters\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
         return;
     } else {
@@ -114,7 +113,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 				switch (ret_status) {
 					case -1:
                         std::cout << "send : banned\n";
-						error = ":yourserver 474 aho #lol :You are banned from this channel\r\n";
+						error = ":yourserver 474 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :You are banned from this channel\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 					case -2:
@@ -122,7 +121,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 						break;
 					case -3:
 						std::cout << "send : wrong key\n";
-                        error = ":yourserver 475 aho #" + *it_firstchannel + ":Cannot join channel(wrong key)\r\n";
+                        error = ":yourserver 475 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Cannot join channel(wrong key)\r\n";
                         std::cout << error << " = error created\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
@@ -132,7 +131,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 						break;
 					default:
                         std::cout << "send : default\n";
-						error = ":yourserver 400 aho #lol:Unexpected error from a /Join command\r\n";
+						error = ":yourserver 400 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Unexpected error from a /Join command\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 				}
