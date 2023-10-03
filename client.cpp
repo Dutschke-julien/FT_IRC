@@ -20,10 +20,23 @@ void Client::set_username(std::string nick)
 	_username = nick;
 }
 
+std::string Client::get_realname(void)
+{
+	return (_realname);
+}
+
+
+void Client::set_realname(std::string nick)
+{
+	_realname = nick;
+}
+
+
 std::string Client::get_nickname(void)
 {
 	return (_nickname);
 }
+
 
 void Client::set_nickname(std::string nick)
 {
@@ -43,6 +56,7 @@ void Client::set_clientAddr(sockaddr_in new_struct)
 Client::Client()
 {
 	std::cout << "Class Client build\n";
+	_status = 0;
 }
 
 Client::~Client()

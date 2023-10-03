@@ -26,12 +26,15 @@ class Client
 	sockaddr_in _clientAddr;
 	std::string _nickname;
 	std::string _username;
+	std::string _realname;	
 	int 		_status;
 
 	public:
 	Client();
 	~Client();
 
+	std::string get_realname(void);
+	void set_realname(std::string nick);
 	void set_clientAddr(sockaddr_in new_struct);
 	sockaddr_in get_clientAddr(void);
 	std::string get_nickname(void);

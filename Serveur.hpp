@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/09/28 17:27:06 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/03 17:01:35 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <vector>
 # include <unistd.h>
 # include <cstring>
+# include <sstream>
 # include <arpa/inet.h>
 # include <netinet/in.h>
 # include "client.hpp"
@@ -50,6 +51,7 @@ class Serveur
 
     std::map<std::string, Channel> _listChannel; // map which contains channels, see the file channel.hpp
 	std::vector<std::string> _name_used;
+	std::vector<std::string> _register;
 	std::string _password;
 
 	int	_serverSocket_fd;
@@ -67,6 +69,7 @@ class Serveur
 	void set_password(std::string pass);
 	std::string get_password();
 
+	void cmd_User(std::string cmd, int fd_key);
 	void print_cmd(std::string cmd, int fd_key);
 	void parsing_cmd(Client& client, int fd_key);
 	void Make_Sets_Sockets(fd_set& Sets_Sockets);

@@ -131,26 +131,28 @@ void Serveur::print_cmd(std::string cmd, int fd_key)
 		std::string response = "CAP * LS :\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
-	if (cmd == "NICK aho\r\n")
+	if (cmd == "NICK Nochance\r\n")
 	{
-		std::string response = ":42Mulhouse 001 aho :Welcome to the IRC Server aho!@localhost\r\n";
+		std::string response = ":42Mulhouse 001 Nochance :Welcome to the IRC Server bidule_machin!@localhost\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
-	if (cmd == "USER aho aho localhost :aho aho\r\n")
+	if (cmd == "USER No No localhost :Julien Dutschke\r\n")
 	{
-		std::string response = ":42Mulhouse 002 aho :Your host is yourserver, running version 1.0\r\n";
+		std::string response = ":42Mulhouse 002 No :Your host is yourserver, running version 1.0\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
-    if (cmd == "MODE aho +i\r\n")
+    if (cmd == "MODE Nochance +i\r\n")
     {
         std::cout << "index connection\n\n";
-        set_index_connexion(1);
+        //set_index_connexion(1);
     }
 	if (cmd == "PING 42Mulhouse\r\n")
 	{
 		std::string response = ":PONG 42Mulhouse\r\n";
 		send(fd_key, response.c_str(), response.length(), 0);
 	}
+	else
+		std::cout << cmd;
 }
 
 void Serveur::commun_cmd(std::string cmd, int fd_key) {
