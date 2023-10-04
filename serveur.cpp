@@ -120,41 +120,6 @@ void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets
         }
 }
 
-
-void Serveur::print_cmd(std::string cmd, int fd_key)
-{
-    if (cmd != "PING 42Mulhouse\r\n") {
-        std::cout << "le client [" << fd_key << "] a envoyer la cmd suivante : " << cmd << std::endl;
-    }
-	if (cmd == "CAP LS 302\r\n")
-	{
-		std::string response = "CAP * LS :\r\n";
-		send(fd_key, response.c_str(), response.length(), 0);
-	}
-	if (cmd == "NICK Nochance\r\n")
-	{
-		std::string response = ":42Mulhouse 001 Nochance :Welcome to the IRC Server bidule_machin!@localhost\r\n";
-		send(fd_key, response.c_str(), response.length(), 0);
-	}
-	if (cmd == "USER No No localhost :Julien Dutschke\r\n")
-	{
-		std::string response = ":42Mulhouse 002 No :Your host is yourserver, running version 1.0\r\n";
-		send(fd_key, response.c_str(), response.length(), 0);
-	}
-    if (cmd == "MODE Nochance +i\r\n")
-    {
-        std::cout << "index connection\n\n";
-        //set_index_connexion(1);
-    }
-	if (cmd == "PING 42Mulhouse\r\n")
-	{
-		std::string response = ":PONG 42Mulhouse\r\n";
-		send(fd_key, response.c_str(), response.length(), 0);
-	}
-	else
-		std::cout << cmd;
-}
-
 void Serveur::commun_cmd(std::string cmd, int fd_key) {
 
     std::string::iterator start_it;
@@ -212,10 +177,20 @@ void Serveur::parsing_cmd(Client& client, int fd_key)
 
 	while (find_command != -1)
 	{
-        if (get_index_connexion() == 0)
-            print_cmd(client.pack.cmd.substr(0, find_command + 2), fd_key);
+		std::string input = client.pack.cmd.substr(0, find_command + 2);
+
+        if (input == "PING 42Mulhouse\r\n")
+		{
+			std::string response = "PONG 42Mulhouse\r\n";
+            send(fd_key, response.c_str(), response.length(), 0);
+		}
+		else if (input == "CAP LS 302\r\n")
+		{
+			std::string response = "CAP * LS :\r\n";
+			send(fd_key, response.c_str(), response.length(), 0);
+		}
         else
-            commun_cmd(client.pack.cmd.substr(0, find_command + 2), fd_key);
+            commun_cmd(input, fd_key);
         client.pack.cmd.erase(0, find_command + 2);
         find_command = client.pack.cmd.find("\r\n");
 	}
@@ -224,6 +199,11 @@ void Serveur::parsing_cmd(Client& client, int fd_key)
 
 void Serveur::launch_serveur()
 {
+	if (_password.find_first_of(" ") != std::string::npos)
+	{
+		std::cout << "Erreur format mot de passe\n";
+		return;
+	}
 	this->set_list_command();
     this->set_index_connexion(0);
 	while (true)
@@ -306,7 +286,7 @@ void Serveur::set_list_command() {
     this->_list_cmd[2].cmd = "PRVMSG";
     this->_list_cmd[2].f = &Serveur::cmd_tmp;
     this->_list_cmd[3].cmd = "USER";
-    this->_list_cmd[3].f = &Serveur::cmd_tmp;
+    this->_list_cmd[3].f = &Serveur::cmd_User;
     this->_list_cmd[4].cmd = "KICK";
     this->_list_cmd[4].f = &Serveur::cmd_tmp;
     this->_list_cmd[5].cmd = "PASS";

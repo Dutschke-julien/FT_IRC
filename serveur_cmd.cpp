@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:02:42 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/03 17:15:56 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/04 17:19:52 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void Serveur::cmd_User(std::string cmd, int fd_key)
 {
-
 	if(_mapClients[fd_key].get_status() == 0)
 	{
 		cmd.erase(cmd.find_last_not_of("\r\n") + 1);
@@ -69,7 +68,6 @@ void Serveur::cmd_User(std::string cmd, int fd_key)
 		send(fd_key, erreur.c_str(), erreur.length(), 0);
 	}
 }
-
 
 void del_Nick_toks(std::vector<std::string>& nameVector, std::string Nick)
 {
