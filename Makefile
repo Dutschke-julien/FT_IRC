@@ -25,10 +25,13 @@ CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 SOURCES =   main.cpp\
 			serveur.cpp\
 			client.cpp\
-			serveur_cmd.cpp \
+			User_cmd.cpp \
 			channel_cmd.cpp \
 			channel.cpp \
 			Channel_Join.cpp \
+			utlis_function.cpp\
+			Nick_cmd.cpp \
+
 
 # Fichiers objets
 

@@ -12,6 +12,11 @@
 
 #include "Serveur.hpp"
 
+void    Serveur::cmd_tmp(std::string string, int fd_key)
+{
+	(void)string;
+	(void)fd_key;
+}
 
 void Serveur::set_port(int pt)
 {

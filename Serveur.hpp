@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/03 17:01:35 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/04 18:04:29 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 
 
 bool isNickTaken(const std::vector<std::string>& nameVector, const std::string& newNick);
-void del_Nick_toks(std::vector<std::string>& nameVector, std::string& Nick);
+void del_Nick_toks(std::vector<std::string>& nameVector, std::string Nick);
 
 class Serveur
 {
