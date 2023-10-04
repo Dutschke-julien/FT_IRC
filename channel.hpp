@@ -16,7 +16,6 @@ private:
     int             _invite_only;
     int             _topic_restriction;
     int             _password_set;
-    int             _oper_only;
     int             _limit_client;
 	std::string     _pass;
     std::list<int>  _full_list;
@@ -40,6 +39,7 @@ public:
     int find_client(int fd_key);
     int find_oper(int fd_key);
     std::list<int> get_list_user();
+    std::string get_pass();
 };
 
 

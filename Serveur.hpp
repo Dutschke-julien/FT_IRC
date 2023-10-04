@@ -91,8 +91,7 @@ class Serveur
     void    send_topic(std::string channel, int fd_key); //function which send to the client (fd_key) the channel's topic
     int     check_topic(std::string channel, int fd_key); // function with basic verification
     void    modify_topic(std::string channel, std::string topic, int fd_key); //function which will modify and send to all client the topic
-//    std::string join_get_error(std::string server, std::string nbr, std::string nick, std::string channel, std::string message); //function to return the numerical error for the clients
-
+    void    reply_join(std::string channel, int fd_key); //function which send reply, topic and list to the client
 };
 
 #endif

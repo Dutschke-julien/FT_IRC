@@ -31,7 +31,7 @@ SOURCES =   main.cpp\
 			Channel_Join.cpp \
 			utlis_function.cpp\
 			Nick_cmd.cpp \
-
+			Channel_topic.cpp \
 
 # Fichiers objets
 
