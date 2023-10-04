@@ -10,9 +10,6 @@ class Client;
 
 # include "Serveur.hpp"
 
-
-
-
 struct package
 {
   int type;
@@ -28,6 +25,7 @@ class Client
 	std::string _username;
 	std::string _realname;	
 	int 		_status;
+    std::string _current_channel;
 
 	public:
 	Client();
@@ -44,6 +42,8 @@ class Client
 	int get_status(void);
 	void set_status(int status);
 	struct package pack;
+    void        set_current_channel(std::string channel);
+    std::string get_current_channel();
 };
 
 

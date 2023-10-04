@@ -34,7 +34,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 //    }
 //    if (string == "#test3\r\n") {
 //        std::cout << "test3\n";
-//        error = ":yourserver 461 aho : not enough parameters\r\n";
+//        error = ":yourserver 461 aho /join: not enough parameters\r\n";
 //        send(fd_key, error.c_str(), error.length(), 0);
 //        return;
 //    }
@@ -118,6 +118,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 						break;
 					case -2:
                         std::cout << "already registered\n";
+                        _mapClients[fd_key].set_current_channel(*it_firstchannel);
 						break;
 					case -3:
 						std::cout << "send : wrong key\n";
@@ -126,21 +127,24 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 					case 2:
+                        _mapClients[fd_key].set_current_channel(*it_firstchannel);
 						std::cout << "ok with key\n";
 						list_key.erase(list_key.begin());
 						break;
 					default:
                         std::cout << "send : default\n";
-						error = ":yourserver 400 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Unexpected error from a /Join command\r\n";
+						error = ":yourserver 400 " + _mapClients[fd_key].get_nickname() + " JOIN :Unexpected error from a /Join command\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						break;
 				}
 			} else if (list_key.empty()) {
 				std::cout << "channel created without key == " << *it_firstchannel << std::endl;
+                _mapClients[fd_key].set_current_channel(*it_firstchannel);
 				_listChannel[*it_firstchannel] = Channel(fd_key);
 			} else {
 				std::cout << "channel created with key == " << *it_firstchannel << " && " << *(list_key.begin()) << std::endl;
 				_listChannel[*it_firstchannel] = Channel(fd_key, *(list_key.begin()));
+                _mapClients[fd_key].set_current_channel(*it_firstchannel);
 				list_key.erase(list_key.begin());
 			}
 			list_channel.erase(it_firstchannel);

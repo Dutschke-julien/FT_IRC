@@ -1,5 +1,13 @@
 #include "client.hpp"
 
+void Client::set_current_channel(std::string channel) {
+    _current_channel = channel;
+}
+
+std::string Client::get_current_channel() {
+    return _current_channel;
+}
+
 int Client::get_status(void)
 {
 	return (_status);

@@ -1,0 +1,11 @@
+note to myself :
+JOIN : It still need to be finished, it don't reply the topic nor the welcome's message to the clients
+    this feature need to be added to the switch case 2, and for both of the channel creation.
+    numeric error need to be check when everything is connected.
+
+topic : the iss's split is wrong, it should be split first at the :, verify if there a topic, then get the channel if there is any.
+    the rest should work even with the modification.
+
+TODO NEXT :
+    more information about the modes is needed, then implemented in join and topic before further advancement.
+    it will be easier to add functions related to mode.

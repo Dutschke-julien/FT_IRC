@@ -13,20 +13,56 @@ Channel::Channel() {}
 Channel::~Channel() {}
 
 Channel::Channel(int fd_oper) {
-	_mode = 1;
+    _invite_only = 0;
+    _topic_restriction = 0;
+    _password_set = 0;
+    _oper_only = 0;
+    _limit_client = 0;
 	_oper.push_back(fd_oper);
 	_full_list.push_back(fd_oper);
 }
 
 Channel::Channel(int fd_oper, std::string pass) {
-	_mode = 1;
 	_oper.push_back(fd_oper);
 	_full_list.push_back(fd_oper);
 	_pass = pass;
+    _invite_only = 0;
+    _topic_restriction = 0;
+    _password_set = 1;
+    _oper_only = 0;
+    _limit_client = 0;
 }
 
-int Channel::set_mode() {
-	return 0;
+int Channel::find_client(int fd_key) {
+    for (std::list<int>::iterator i = _full_list.begin(); i != _full_list.end() ; i++) {
+        if (*i == fd_key)
+            return (1);
+    }
+    return (0);
+}
+
+int Channel::find_oper(int fd_key) {
+    for (std::list<int>::iterator i = _oper.begin(); i != _oper.end() ; i++) {
+        if (*i == fd_key)
+            return (1);
+    }
+    return (0);
+}
+
+std::list<int> Channel::get_list_user() {
+    return _full_list;
+}
+
+int Channel::get_topic_restriction() {
+    return _topic_restriction;
+}
+
+void Channel::set_topic(std::string topic) {
+    _topic = topic;
+}
+
+std::string Channel::get_topic() {
+    return _topic;
 }
 
 int Channel::add_client(int fd_key) {

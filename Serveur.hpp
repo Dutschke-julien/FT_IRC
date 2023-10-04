@@ -87,6 +87,10 @@ class Serveur
 	void    cmd_tmp(std::string string, int fd_key); // temporary command to fill my array with an address
 	void    cmd_join(std::string string, int fd_key); // function Join
 	int     verif_name(std::string name); //verification if the channel already exit
+    void    cmd_topic(std::string cmd, int fd_key); // function topic
+    void    send_topic(std::string channel, int fd_key); //function which send to the client (fd_key) the channel's topic
+    int     check_topic(std::string channel, int fd_key); // function with basic verification
+    void    modify_topic(std::string channel, std::string topic, int fd_key); //function which will modify and send to all client the topic
 //    std::string join_get_error(std::string server, std::string nbr, std::string nick, std::string channel, std::string message); //function to return the numerical error for the clients
 
 };
