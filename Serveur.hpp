@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/04 18:04:29 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/04 18:11:26 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class Serveur
         std::string cmd;
         void	(Serveur::*f)(std::string, int);
     };
-    struct s_list_cmd _list_cmd[10]; // the array
+    struct s_list_cmd _list_cmd[11]; // the array
 
     std::map<std::string, Channel> _listChannel; // map which contains channels, see the file channel.hpp
 	std::vector<std::string> _name_used;

@@ -304,4 +304,6 @@ void Serveur::set_list_command() {
     this->_list_cmd[8].f = &Serveur::cmd_tmp;
     this->_list_cmd[9].cmd = "OPER";
     this->_list_cmd[9].f = &Serveur::cmd_tmp;
+	this->_list_cmd[10].cmd = "userhost";
+    this->_list_cmd[10].f = &Serveur::cmd_User;
 }
