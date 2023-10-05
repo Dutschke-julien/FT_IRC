@@ -16,7 +16,6 @@ Channel::Channel(int fd_oper) {
     _invite_only = 0;
     _topic_restriction = 0;
     _password_set = 0;
-    _oper_only = 0;
     _limit_client = 0;
 	_oper.push_back(fd_oper);
 	_full_list.push_back(fd_oper);
@@ -29,7 +28,6 @@ Channel::Channel(int fd_oper, std::string pass) {
     _invite_only = 0;
     _topic_restriction = 0;
     _password_set = 1;
-    _oper_only = 0;
     _limit_client = 0;
 }
 
@@ -100,6 +98,10 @@ int Channel::add_client(int fd_key, std::string pass) {
 		}
 	}
 	return (add_client(fd_key));
+}
+
+std::string Channel::get_pass() {
+    return _pass;
 }
 
 int Channel::add_client_ban() {

@@ -72,29 +72,44 @@ void Serveur::send_topic(std::string channel, int fd_key) {
 void Serveur::cmd_topic(std::string cmd, int fd_key) {
     std::map<int, std::string> word;
     std::istringstream iss(cmd);
+    std::string first;
+    std::string second;
+    std::getline(iss, first, ':');
+    std::getline(iss, second);
+    std::istringstream split(first);
 
-    string.erase(string.find_last_of('\n'), 1);
-    string.erase(string.find_last_of('\r'), 1);
-    for (int i = 0; iss ; i++) {
-        iss >> word[i];
+    if (_mapClients[fd_key].get_status() == 1) {
+        std::string erreur = ":server_name 464 * :Mot de passe incorrect. Veuillez vérifier votre mot de passe.\r\n";
+        send(fd_key, erreur.c_str(), erreur.length(), 0);
+        return;
     }
+
+    cmd.erase(cmd.find_last_of('\n'), 1);
+    cmd.erase(cmd.find_last_of('\r'), 1);
+    for (int i = 0; split ; i++) {
+        split >> word[i];
+    }
+    if (!(word[0].empty()))
+        word[0].erase(word[0].find_first_of('#'));
     switch (word.size()) {
         case 1:
-            std::cout << "return the topic of the channel\n";
-            send_topic(word[0], fd_key);
-            break;
-        case 2:
-            std::cout << "modify the topic of the channel\n";
-            modify_topic(word[0], word[1], fd_key);
-            break;
+            if (second.empty()) {
+                std::cout << "return the topic of the channel\n";
+                send_topic(word[0], fd_key);
+                return;
+            } else {
+                std::cout << "modify the topic of the channel\n";
+                modify_topic(word[0], second, fd_key);
+                return;
+            }
         case 0:
             std::cout << "return the topic of the current channel\n";
             send_topic(_mapClients[fd_key].get_current_channel(), fd_key);
-            break;
+            return;
         default:
             std::cout << "return error\n";
             std::string error = ":yourserver 400 " + _mapClients[fd_key].get_nickname() + " TOPIC :Unexpected error from a /topic command\r\n";
             send(fd_key, error.c_str(), error.length(), 0);
-            break;
+            return;
     }
 }
