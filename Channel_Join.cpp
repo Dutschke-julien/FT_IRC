@@ -34,7 +34,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 	int index = 0;
 
     if (_mapClients[fd_key].get_status() == 1) {
-        std::string erreur = ":server_name 464 * :Mot de passe incorrect. Veuillez vérifier votre mot de passe.\r\n";
+        std::string erreur = ":42Mulhouse 464 * :Mot de passe incorrect. Veuillez vérifier votre mot de passe.\r\n";
         send(fd_key, erreur.c_str(), erreur.length(), 0);
         return;
     }
@@ -48,19 +48,17 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 
     if (string == ":") {
 	    std::cout << "send : verif system" << std::endl;
-        error = ":yourserver 001 aho :OK\r\n";
-        send(fd_key, error.c_str(), error.length(), 0);
         return;
     }
     if (string.empty()) {
 	    std::cout << "send : not enough parameters (empty)" << std::endl;
-        error = ":yourserver 461 " + _mapClients[fd_key].get_nickname() + "/join : not enough parameters\r\n";
+        error = ":42Mulhouse 461 " + _mapClients[fd_key].get_nickname() + "/join : not enough parameters\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
         return;
     }
 	it = string.begin();
     if (*it != '#' && ++it != string.end()) {
-	    error = ":yourserver 461 " + _mapClients[fd_key].get_nickname() + "/join : not enough parameters\r\n";
+	    error = ":42Mulhouse 461 " + _mapClients[fd_key].get_nickname() + "/join : not enough parameters\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
         return;
     } else {
@@ -90,7 +88,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
     }
 	if (list_channel.size() < list_key.size()) {
 		std::cout << "send : bad channel mask (too much key)" << std::endl;
-		error = ":yourserver 403 aho : bad channel mask\r\n";
+		error = ":42Mulhouse 403 aho : bad channel mask\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
 		return;
 	} else {
@@ -105,7 +103,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 				switch (ret_status) {
 					case -1:
                         std::cout << "send : banned\n";
-						error = ":yourserver 474 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :You are banned from this channel\r\n";
+						error = ":42Mulhouse 474 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :You are banned from this channel\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						return;
 					case -2:
@@ -114,7 +112,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 						return;
 					case -3:
 						std::cout << "send : wrong key\n";
-                        error = ":yourserver 475 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Cannot join channel(wrong key)\r\n";
+                        error = ":42Mulhouse 475 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Cannot join channel(wrong key)\r\n";
                         std::cout << error << " = error created\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						return;
@@ -129,7 +127,7 @@ void Serveur::cmd_join(std::string string, int fd_key) {
                         return;
 					default:
                         std::cout << "send : default\n";
-						error = ":yourserver 400 " + _mapClients[fd_key].get_nickname() + " JOIN :Unexpected error from a /Join command\r\n";
+						error = ":42Mulhouse 400 " + _mapClients[fd_key].get_nickname() + " JOIN :Unexpected error from a /Join command\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						return;
 				}

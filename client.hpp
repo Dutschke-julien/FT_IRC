@@ -4,9 +4,9 @@ class Client;
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-# define NO_PWD -2
-# define NO_NKN -1
-# define ALL_OK 0
+# define NO_NKN 0
+# define NO_PWD 1
+# define ALL_OK 2
 
 # include "Serveur.hpp"
 

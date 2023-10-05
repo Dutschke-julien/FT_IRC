@@ -276,7 +276,6 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
 				{
                     list_Clients_fd[i] = clientSocket_fd;
 					_mapClients[clientSocket_fd].set_clientAddr(clientAddr);
-					_mapClients[clientSocket_fd].set_status(NO_PWD);
                     break;
                 }
             }

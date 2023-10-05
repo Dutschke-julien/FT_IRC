@@ -6,12 +6,12 @@
 
 int Serveur::check_topic(std::string channel, int fd_key) {
     if (_listChannel.find(channel) == _listChannel.end()) {
-        std::string error = ":yourserver 403 " + _mapClients[fd_key].get_nickname() + " #" + channel + " :No such channel\r\n";
+        std::string error = ":42Mulhouse 403 " + _mapClients[fd_key].get_nickname() + " #" + channel + " :No such channel\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
         return 1;
     }
     if (_listChannel[channel].find_client(fd_key) == 0){
-        std::string error = ":yourserver 442 " + _mapClients[fd_key].get_nickname() + " #" + channel + " :You're not on that channel\r\n";
+        std::string error = ":42Mulhouse 442 " + _mapClients[fd_key].get_nickname() + " #" + channel + " :You're not on that channel\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
         return 1;
     }
@@ -27,7 +27,7 @@ void Serveur::modify_topic(std::string channel, std::string topic, int fd_key) {
     if (check_topic(channel, fd_key) == 1)
         return;
     if (_listChannel[channel].get_topic_restriction() == 1 && _listChannel[channel].find_oper(fd_key) == 0){
-        std::string error = ":yourserver 482 "
+        std::string error = ":42Mulhouse 482 "
                 + _mapClients[fd_key].get_nickname()
                 + " #" + channel
                 + " :You're not channel operator\r\n";
@@ -37,7 +37,7 @@ void Serveur::modify_topic(std::string channel, std::string topic, int fd_key) {
     _listChannel[channel].set_topic(topic);
     std::list<int> user = _listChannel[channel].get_list_user();
     for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
-        std::string reply = ":yourserver 332 "
+        std::string reply = ":42Mulhouse 332 "
                             + _mapClients[*i].get_nickname()
                             + " #" + channel + " :"
                             + _listChannel[channel].get_topic()
@@ -48,18 +48,18 @@ void Serveur::modify_topic(std::string channel, std::string topic, int fd_key) {
 
 void Serveur::send_topic(std::string channel, int fd_key) {
     if (channel.empty()) {
-        std::string error = ":yourserver 461 " + _mapClients[fd_key].get_nickname() + " /topic :Not enough parameters\r\n";
+        std::string error = ":42Mulhouse 461 " + _mapClients[fd_key].get_nickname() + " /topic :Not enough parameters\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
         return;
     }
     if (check_topic(channel, fd_key) == 1)
         return;
     if (_listChannel[channel].get_topic().empty()) {
-        std::string error = ":yourserver 331 " + _mapClients[fd_key].get_nickname() + " #" + channel + " :No topic is set\r\n";
+        std::string error = ":42Mulhouse 331 " + _mapClients[fd_key].get_nickname() + " #" + channel + " :No topic is set\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
         return;
     }
-    std::string reply = ":yourserver 332 "
+    std::string reply = ":42Mulhouse 332 "
             + _mapClients[fd_key].get_nickname()
             + " #" + channel + " :"
             + _listChannel[channel].get_topic()
@@ -79,7 +79,7 @@ void Serveur::cmd_topic(std::string cmd, int fd_key) {
     std::istringstream split(first);
 
     if (_mapClients[fd_key].get_status() == 1) {
-        std::string erreur = ":server_name 464 * :Mot de passe incorrect. Veuillez vérifier votre mot de passe.\r\n";
+        std::string erreur = ":42Mulhouse 464 * :Mot de passe incorrect. Veuillez vérifier votre mot de passe.\r\n";
         send(fd_key, erreur.c_str(), erreur.length(), 0);
         return;
     }
@@ -108,7 +108,7 @@ void Serveur::cmd_topic(std::string cmd, int fd_key) {
             return;
         default:
             std::cout << "return error\n";
-            std::string error = ":yourserver 400 " + _mapClients[fd_key].get_nickname() + " TOPIC :Unexpected error from a /topic command\r\n";
+            std::string error = ":42Mulhouse 400 " + _mapClients[fd_key].get_nickname() + " TOPIC :Unexpected error from a /topic command\r\n";
             send(fd_key, error.c_str(), error.length(), 0);
             return;
     }
