@@ -130,11 +130,10 @@ void Serveur::commun_cmd(std::string cmd, int fd_key) {
     std::string::iterator start_it;
     std::string word;
 
-
-        if (cmd == "PING 42Mulhouse\r\n") {
-            std::string response = "PONG 42Mulhouse\r\n";
-            send(fd_key, response.c_str(), response.length(), 0);
-        }
+    if (cmd == "PING 42Mulhouse\r\n") {
+        std::string response = "PONG 42Mulhouse\r\n";
+        send(fd_key, response.c_str(), response.length(), 0);
+    }
 
     start_it = cmd.begin();
     while (*start_it != ' ' && start_it != cmd.end() && *start_it != '\r' && *start_it != '\n') {
@@ -142,33 +141,11 @@ void Serveur::commun_cmd(std::string cmd, int fd_key) {
         start_it++;
     }
 
-    /*
-     * portion of code to know what the difference between word and the command
-    */
-//
-//    for (std::string::iterator verif = word.begin(); verif != word.end() ; verif++) {
-//        std::cout << *verif << "-"<< std::endl;
-//    }
-//    std::cout << "end of word\n";
-//
-//    for (std::string::iterator verif = _list_cmd[0].cmd.begin(); verif != _list_cmd[0].cmd.end() ; verif++) {
-//        std::cout << *verif << "-"<< std::endl;
-//    }
-//    std::cout << "end of command\n";
-//
-//    std::cout << word << " == " << _list_cmd[0].cmd << std::endl;
-//    if (word == _list_cmd[0].cmd)
-//        std::cout << "HERE\n";
-
-    /*
-     * verification's end
-     */
     if (cmd != "PING 42Mulhouse\r\n")
         std::cout << "le client [" << fd_key << "] a envoyer la cmd suivante : " << cmd << std::endl;
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 11; ++i) {
         if (word == _list_cmd[i].cmd) {
             cmd.erase(cmd.begin(), start_it);
-//            std::cout << cmd << " === cmd after erase "<< std::endl;
             (this->*_list_cmd[i].f)(cmd, fd_key);
         }
     }
@@ -298,7 +275,7 @@ void Serveur::set_list_command() {
     this->_list_cmd[6].cmd = "INVITE";
     this->_list_cmd[6].f = &Serveur::cmd_tmp;
     this->_list_cmd[7].cmd = "TOPIC";
-    this->_list_cmd[7].f = &Serveur::cmd_tmp;
+    this->_list_cmd[7].f = &Serveur::cmd_topic;
     this->_list_cmd[8].cmd = "MODE";
     this->_list_cmd[8].f = &Serveur::cmd_tmp;
     this->_list_cmd[9].cmd = "OPER";

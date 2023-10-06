@@ -42,21 +42,21 @@ class Serveur
 	std::map <int, Client> _mapClients;
 	std::vector<int> _list_Clients_fd;
 
-    struct s_list_cmd // structure of the array of pointers to store commands
+    struct s_list_cmd
     {
         std::string cmd;
         void	(Serveur::*f)(std::string, int);
     };
     struct s_list_cmd _list_cmd[11]; // the array
 
-    std::map<std::string, Channel> _listChannel; // map which contains channels, see the file channel.hpp
+    std::map<std::string, Channel> _listChannel;
 	std::vector<std::string> _name_used;
 	std::vector<std::string> _register;
 	std::string _password;
 
 	int	_serverSocket_fd;
 	int _port;
-	int _index_connection; // act as switch to differentiate command such as NICK, JOIN, USER from the /connect and the user
+	int _index_connection; // (obsolete)
 
 	public:
 	Serveur(int port, char *password);

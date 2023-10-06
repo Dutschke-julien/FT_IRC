@@ -1,7 +1,3 @@
-note to myself :
-JOIN : test needed, numeric reply should be double checked
-
-topic : test needed
-
 TODO NEXT :
-    mode in priority
+    JOIN : add the reply to signal to the client that he is an operators if he create the channel
+    MODE : start the functions to get something usable

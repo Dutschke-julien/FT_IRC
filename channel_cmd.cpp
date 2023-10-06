@@ -1,14 +1,4 @@
-//
-// Created by PC on 22/09/2023.
-//
-
 #include "Serveur.hpp"
-
-//std::string Serveur::join_get_error(std::string server, std::string nbr, std::string nick, std::string channel,
-//                                    std::string message) {
-//    std::string result;
-//    result
-//}
 
 int Serveur::verif_name(std::string name) {
     std::cout << "entering verif_name function\n";

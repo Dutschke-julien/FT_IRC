@@ -1,7 +1,3 @@
-//
-// Created by Antoine Ho on 9/19/23.
-//
-
 #ifndef FT_IRC3_CHANNEL_HPP
 #define FT_IRC3_CHANNEL_HPP
 
