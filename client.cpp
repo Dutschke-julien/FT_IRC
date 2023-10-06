@@ -8,6 +8,20 @@ std::string Client::get_current_channel() {
     return _current_channel;
 }
 
+void	Client::add_channel_invitation(std::string channel) {
+	_channel_invite.push_back(channel);
+}
+
+int Client::find_and_remove_invitation(std::string channel) {
+	for (std::list<std::string>::iterator i = _channel_invite.begin(); i != _channel_invite.end() ; i++) {
+		if (*i == channel) {
+			_channel_invite.remove(channel);
+			return 1;
+		}
+	}
+	return 0;
+}
+
 int Client::get_status(void)
 {
 	return (_status);

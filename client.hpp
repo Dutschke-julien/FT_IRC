@@ -26,6 +26,7 @@ class Client
 	std::string _realname;	
 	int 		_status;
     std::string _current_channel;
+	std::list<std::string> _channel_invite;
 
 	public:
 	Client();
@@ -44,6 +45,8 @@ class Client
 	struct package pack;
     void        set_current_channel(std::string channel);
     std::string get_current_channel();
+	void	add_channel_invitation(std::string channel);
+	int	find_and_remove_invitation(std::string channel);
 };
 
 

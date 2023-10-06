@@ -17,7 +17,7 @@ int Serveur::check_topic(std::string channel, int fd_key) {
 void Serveur::modify_topic(std::string channel, std::string topic, int fd_key) {
     if (check_topic(channel, fd_key) == 1)
         return;
-    if (_listChannel[channel].get_topic_restriction() == 1 && _listChannel[channel].find_oper(fd_key) == 0){
+    if (_listChannel[channel].get_topic_restriction() == -1 && _listChannel[channel].find_oper(fd_key) == 0){
         std::string error = ":42Mulhouse 482 "
                 + _mapClients[fd_key].get_nickname()
                 + " #" + channel

@@ -20,22 +20,32 @@ private:
     std::string     _topic;
 
 public:
-    Channel(int fd_oper);
-	Channel(int fd_oper, std::string pass);
+    Channel(int fd);
+	Channel(int fd, std::string pass);
 	Channel();
     ~Channel();
 
-    void set_topic(std::string topic);
-    std::string get_topic();
-    int get_topic_restriction();
     int add_client(int fd_key);
-	int add_client(int fd_key, std::string pass);
+    int add_client(int fd_key, std::string pass);
     int add_client_ban();
+	int add_oper(int fd_key);
+
     int remove_client();
+
+    void set_topic(std::string topic);
+    void set_mode_invite();
+	void set_mode_topic();
+	void set_password(std::string pass);
+	void set_limit(std::string number);
+
+    std::string     get_topic();
+    int             get_topic_restriction();
+    std::list<int>  get_list_user();
+    std::string     get_pass();
+	int				get_invite_only();
+
     int find_client(int fd_key);
     int find_oper(int fd_key);
-    std::list<int> get_list_user();
-    std::string get_pass();
 };
 
 

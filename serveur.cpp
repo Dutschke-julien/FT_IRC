@@ -154,7 +154,7 @@ void Serveur::commun_cmd(std::string cmd, int fd_key) {
 void Serveur::parsing_cmd(Client& client, int fd_key)
 {
 	int find_command = 0;
-	 
+
 	find_command = client.pack.cmd.find("\r\n");
 
 	while (find_command != -1)
@@ -170,6 +170,9 @@ void Serveur::parsing_cmd(Client& client, int fd_key)
 		{
 			std::string response = "CAP * LS :\r\n";
 			send(fd_key, response.c_str(), response.length(), 0);
+		}
+		else if (input == "CAP END") {
+			set_index_connexion(1);
 		}
         else
             commun_cmd(input, fd_key);
@@ -277,7 +280,7 @@ void Serveur::set_list_command() {
     this->_list_cmd[7].cmd = "TOPIC";
     this->_list_cmd[7].f = &Serveur::cmd_topic;
     this->_list_cmd[8].cmd = "MODE";
-    this->_list_cmd[8].f = &Serveur::cmd_tmp;
+    this->_list_cmd[8].f = &Serveur::cmd_mode;
     this->_list_cmd[9].cmd = "OPER";
     this->_list_cmd[9].f = &Serveur::cmd_tmp;
 	this->_list_cmd[10].cmd = "userhost";

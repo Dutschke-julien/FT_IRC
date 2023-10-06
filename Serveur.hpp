@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <string>
 # include <map>
+# include <list>
 # include <vector>
 # include <unistd.h>
 # include <cstring>
@@ -81,17 +82,22 @@ class Serveur
 
 	void cmd_Nick(std::string cmd, int fd_key);
 
-	void	set_index_connexion(int index); // setter for connection's index
-	int		get_index_connexion(); // getter
-	void    commun_cmd(std::string cmd, int fd_key); // function which will redirect the string to our command
-	void    cmd_tmp(std::string string, int fd_key); // temporary command to fill my array with an address
-	void    cmd_join(std::string string, int fd_key); // function Join
-	int     verif_name(std::string name); //verification if the channel already exit
+    void    commun_cmd(std::string cmd, int fd_key); // function which will redirect the string to our command
+    void    cmd_tmp(std::string string, int fd_key); // temporary command to fill my array with an address
+    void    cmd_mode(std::string string, int fd_key); // function mode
+    void    cmd_join(std::string string, int fd_key); // function Join
     void    cmd_topic(std::string cmd, int fd_key); // function topic
+
+    void	set_index_connexion(int index); // setter for connection's index (obsolete)
+    int		get_index_connexion(); // getter (obsolete)
+
+    void    reply_join(std::string channel, int fd_key); //function which send reply, topic and list to the client
+    int     verif_name(std::string name); //verification if the channel already exit
+
     void    send_topic(std::string channel, int fd_key); //function which send to the client (fd_key) the channel's topic
     int     check_topic(std::string channel, int fd_key); // function with basic verification
+
     void    modify_topic(std::string channel, std::string topic, int fd_key); //function which will modify and send to all client the topic
-    void    reply_join(std::string channel, int fd_key); //function which send reply, topic and list to the client
 };
 
 #endif

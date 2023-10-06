@@ -4,21 +4,19 @@ Channel::Channel() {}
 
 Channel::~Channel() {}
 
-Channel::Channel(int fd_oper) {
-    _invite_only = 0;
-    _topic_restriction = 0;
-    _password_set = 0;
+Channel::Channel(int fd) {
+    _invite_only = 1;
+    _topic_restriction = 1;
+    _password_set = 1;
     _limit_client = 0;
-	_oper.push_back(fd_oper);
-	_full_list.push_back(fd_oper);
+	_full_list.push_back(fd);
 }
 
-Channel::Channel(int fd_oper, std::string pass) {
-	_oper.push_back(fd_oper);
-	_full_list.push_back(fd_oper);
+Channel::Channel(int fd, std::string pass) {
+	_full_list.push_back(fd);
 	_pass = pass;
-    _invite_only = 0;
-    _topic_restriction = 0;
+    _invite_only = 1;
+    _topic_restriction = 1;
     _password_set = 1;
     _limit_client = 0;
 }
@@ -102,4 +100,29 @@ int Channel::add_client_ban() {
 
 int Channel::remove_client() {
 	return 0;
+}
+
+void Channel::set_mode_topic() {
+	_topic_restriction *= -1;
+}
+
+void Channel::set_mode_invite() {
+	_invite_only *= -1;
+}
+
+void Channel::set_password(std::string pass) {
+	_pass = pass;
+}
+
+void Channel::set_limit(std::string number) {
+	_limit_client = atol(number.c_str());
+}
+
+int Channel::add_oper(int fd_key) {
+	_oper.push_back(fd_key);
+	return 0;
+}
+
+int Channel::get_invite_only() {
+	return _invite_only;
 }

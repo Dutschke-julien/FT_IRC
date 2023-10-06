@@ -31,11 +31,11 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 	int ret_status;
 	int index = 0;
 
-    if (_mapClients[fd_key].get_status() == 1) {
-        std::string erreur = ":42Mulhouse 464 * :Mot de passe incorrect. Veuillez vérifier votre mot de passe.\r\n";
-        send(fd_key, erreur.c_str(), erreur.length(), 0);
-        return;
-    }
+//    if (_mapClients[fd_key].get_status() != 2) {
+//        std::string erreur = ":42Mulhouse 475 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Cannot join channel(wrong key)\r\n";
+//        send(fd_key, erreur.c_str(), erreur.length(), 0);
+//        return;
+//    }
 
 	del_space = string.begin();
 	while (*del_space == ' '){
@@ -86,13 +86,19 @@ void Serveur::cmd_join(std::string string, int fd_key) {
     }
 	if (list_channel.size() < list_key.size()) {
 		std::cout << "JOIN :: send : bad channel mask (too much key)" << std::endl;
-		error = ":42Mulhouse 403 aho : bad channel mask\r\n";
+		error = ":42Mulhouse 403 " + _mapClients[fd_key].get_nickname() + " : bad channel mask\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
 		return;
 	} else {
 		it_firstchannel = list_channel.begin();
 		while (it_firstchannel != list_channel.end()) {
 			if (verif_name(*it_firstchannel) == 1) {
+				if (_listChannel[*it_firstchannel].get_invite_only() == -1
+					&& _mapClients[fd_key].find_and_remove_invitation(*it_firstchannel) == 0) {
+					error = ":42Mulhouse 473" + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Cannot join channel (invitation only)\r\n";
+					send(fd_key, error.c_str(), error.length(), 0);
+					return;
+				}
                 if (_listChannel[*it_firstchannel].get_pass().empty())
                     ret_status = _listChannel[*it_firstchannel].add_client(fd_key);
                 else if (list_key.empty())

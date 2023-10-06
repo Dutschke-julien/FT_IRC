@@ -28,10 +28,11 @@ SOURCES =   main.cpp\
 			User_cmd.cpp \
 			channel_cmd.cpp \
 			channel.cpp \
-			Channel_Join.cpp \
+			Join_cmd.cpp \
 			utlis_function.cpp\
 			Nick_cmd.cpp \
-			Channel_topic.cpp \
+			Topic_cmd.cpp \
+			Mode_cmd.cpp \
 
 # Fichiers objets
 
