@@ -280,7 +280,7 @@ void Serveur::set_list_command() {
     this->_list_cmd[4].cmd = "KICK";
     this->_list_cmd[4].f = &Serveur::cmd_tmp;
     this->_list_cmd[5].cmd = "PASS";
-    this->_list_cmd[5].f = &Serveur::cmd_tmp;
+    this->_list_cmd[5].f = &Serveur::Cmd_Pass;
     this->_list_cmd[6].cmd = "INVITE";
     this->_list_cmd[6].f = &Serveur::cmd_tmp;
     this->_list_cmd[7].cmd = "TOPIC";
