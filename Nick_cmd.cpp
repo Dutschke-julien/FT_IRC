@@ -14,6 +14,11 @@
 
 void Serveur::cmd_Nick(std::string cmd, int fd_key)
 {
+	if (_mapClients[fd_key].get_status() == NO_PASS)
+	{
+		__mapClients[fd_key].set_status(KICK);
+		return;
+	}
     std::string pseudonyme = cmd.erase(cmd.find_last_not_of("\r\n") + 1);
 
 	for (std::string::iterator it = pseudonyme.begin(); *it == ' '; it++)
