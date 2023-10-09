@@ -12,6 +12,26 @@
 
 #include "Serveur.hpp"
 
+
+void Serveur::Cmd_Pass(std::string cmd, int fd_key)
+{
+	cmd.erase(cmd.find_last_not_of("\r\n") + 1);
+	std::istringstream iss(cmd);
+
+	std::string mdp;
+
+	iss >> mdp;
+
+	if (mdp == _mapClients[fd_key].get_password())
+	{
+		__mapClients[fd_key].set_status(NO_NICK);
+		return ;
+	}
+	else
+		__mapClients[fd_key].set_status(KICK);
+}
+
+
 void Serveur::cmd_User(std::string cmd, int fd_key)
 {
 
