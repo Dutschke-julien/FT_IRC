@@ -159,7 +159,12 @@ void Serveur::parsing_cmd(Client& client, int fd_key)
 
 	while (find_command != -1)
 	{
-		std::string input = client.pack.cmd.substr(0, find_command + 2);
+	if (_mapClients[fd_key].get_status() == KICK)
+	{
+		deconnect_client(_list_Clients_fd, _mapClients[fd_key]._vector_index);
+		return();
+	}	
+	std::string input = client.pack.cmd.substr(0, find_command + 2);
 
         if (input == "PING 42Mulhouse\r\n")
 		{
@@ -256,6 +261,7 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
 				{
                     list_Clients_fd[i] = clientSocket_fd;
 					_mapClients[clientSocket_fd].set_clientAddr(clientAddr);
+			_mapClients[clientSocket_fd]._vector_index = i;
                     break;
                 }
             }
