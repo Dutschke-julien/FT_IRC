@@ -4,9 +4,11 @@ class Client;
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-# define NO_NKN 0
-# define NO_PWD 1
-# define ALL_OK 2
+# define KICK -1
+# define NO_PASS 0
+# defien NO_NICK 1
+# define NO_USERNAME 2
+# define ALL_OK 3
 
 # include "Serveur.hpp"
 
@@ -32,6 +34,7 @@ class Client
 	Client();
 	~Client();
 
+	int _vector_index;
 	std::string get_realname(void);
 	void set_realname(std::string nick);
 	void set_clientAddr(sockaddr_in new_struct);
