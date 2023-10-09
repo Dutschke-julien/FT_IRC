@@ -32,7 +32,7 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
         std::string erreur = ":42Mulhouse 431 * :Pseudonyme manquant. Utilisation : /NICK <pseudonyme>\r\n";
         send(fd_key, erreur.c_str(), erreur.length(), 0);
     }
-    else if (pseudonyme.find_first_of("#@!:%&*,._- ") != std::string::npos)
+    else if (pseudonyme.find_first_of("#@!:%&*,.- ") != std::string::npos)
     {
         // Caractères non autorisés dans le pseudonyme, envoie un message d'erreur
         std::string erreur = ":42Mulhouse 432 * :Caractères non autorisés dans le pseudonyme\r\n";
