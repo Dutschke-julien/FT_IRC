@@ -6,7 +6,7 @@ class Client;
 
 # define KICK -1
 # define NO_PASS 0
-# defien NO_NICK 1
+# define NO_NICK 1
 # define NO_USERNAME 2
 # define ALL_OK 3
 
