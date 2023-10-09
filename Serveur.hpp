@@ -63,13 +63,13 @@ class Serveur
 	Serveur(int port, char *password);
 	~Serveur();
 
-
-    void set_list_command();
+    	void set_list_command();
 	void set_port(int pt);
 	int get_port();
 	void set_password(std::string pass);
 	std::string get_password();
 
+	void Cmd_Pass(std::string cmd, int fd_key);
 	void cmd_User(std::string cmd, int fd_key);
 	void print_cmd(std::string cmd, int fd_key);
 	void parsing_cmd(Client& client, int fd_key);
