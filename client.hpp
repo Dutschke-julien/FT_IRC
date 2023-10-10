@@ -4,11 +4,6 @@ class Client;
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-# define KICK -1
-# define NO_PASS 0
-# define NO_NICK 1
-# define NO_USERNAME 2
-# define ALL_OK 3
 
 # include "Serveur.hpp"
 

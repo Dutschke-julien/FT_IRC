@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 17:56:57 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/05 17:41:27 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:03:12 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
 {
 	if (_mapClients[fd_key].get_status() == NO_PASS)
 	{
-		__mapClients[fd_key].set_status(KICK);
+		_mapClients[fd_key].set_status(KICK);
 		return;
 	}
     std::string pseudonyme = cmd.erase(cmd.find_last_not_of("\r\n") + 1);
@@ -26,6 +26,8 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
 		pseudonyme.erase(it);
 	}
     // Vérifie si le pseudonyme est vide
+	if (_mapClients[fd_key].get_status() == NO_NICK)
+		_mapClients[fd_key].set_status(NO_USERNAME);
     if (pseudonyme.empty())
     {
         // Pseudonyme manquant, envoie un message d'erreur

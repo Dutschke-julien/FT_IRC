@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/04 18:11:26 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:01:36 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,11 @@
 # include "client.hpp"
 # include "channel.hpp"
 # define MAX_CLIENTS 10
-
+# define KICK -1
+# define NO_PASS 0
+# define NO_NICK 1
+# define NO_USERNAME 2
+# define ALL_OK 3
 
 
 bool isNickTaken(const std::vector<std::string>& nameVector, const std::string& newNick);

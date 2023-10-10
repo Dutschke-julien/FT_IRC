@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:02:42 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/06 16:15:49 by aho              ###   ########.fr       */
+/*   Updated: 2023/10/10 17:00:23 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,23 @@ void Serveur::Cmd_Pass(std::string cmd, int fd_key)
 
 	iss >> mdp;
 
-	if (mdp == _mapClients[fd_key].get_password())
+	if (mdp == get_password())
 	{
-		__mapClients[fd_key].set_status(NO_NICK);
+		_mapClients[fd_key].set_status(NO_NICK);
 		return ;
 	}
 	else
-		__mapClients[fd_key].set_status(KICK);
+		_mapClients[fd_key].set_status(KICK);
 }
 
 
 void Serveur::cmd_User(std::string cmd, int fd_key)
 {
 
+	std::cout << "Voici la valeur du status :" << _mapClients[fd_key].get_status() << std::endl;
 	if (_mapClients[fd_key].get_status() == NO_PASS || _mapClients[fd_key].get_status() == NO_NICK)
 	{
-		__mapClients[fd_key].set_status(KICK);
+		_mapClients[fd_key].set_status(KICK);
 		return;
 	}
 	
@@ -70,7 +71,5 @@ void Serveur::cmd_User(std::string cmd, int fd_key)
 			send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
 			_mapClients[fd_key].set_status(ALL_OK);
 		}
-	}
-
 }
 

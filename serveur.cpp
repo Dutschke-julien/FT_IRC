@@ -104,8 +104,8 @@ void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets
 	char message[1024];
 
 
-	for (int i = 0; i < MAX_CLIENTS; i++) 
-		{
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
             //regarde si le socket  est pret a lire d'apres select 
 			if (FD_ISSET(list_Clients_fd[i], &Sets_Sockets))
 			{
@@ -120,7 +120,7 @@ void Serveur::read_client_message(std::vector<int>& list_Clients_fd, fd_set Sets
             		message[bytesRead] = '\0';
 					_mapClients[list_Clients_fd[i]].pack.cmd += message;
 					parsing_cmd(_mapClients[list_Clients_fd[i]], list_Clients_fd[i]);
-                }
+				}
             }
         }
 }
@@ -162,7 +162,7 @@ void Serveur::parsing_cmd(Client& client, int fd_key)
 	if (_mapClients[fd_key].get_status() == KICK)
 	{
 		deconnect_client(_list_Clients_fd, _mapClients[fd_key]._vector_index);
-		return();
+		return;
 	}	
 	std::string input = client.pack.cmd.substr(0, find_command + 2);
 
