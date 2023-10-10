@@ -23,17 +23,27 @@ void Serveur::cmd_mode(std::string string, int fd_key) {
         send(fd_key, erreur.c_str(), erreur.length(), 0);
         return;
     }
-    if (word[1] == "+i" && word.size() == 2) {
-        _listChannel[word[0]].set_mode_invite();
+    if (word[1] == "+i" && word.size() == 2 && _listChannel[word[0]].find_client(fd_key)) {
+        _listChannel[word[0]].set_mode_invite(-1);
     } else if (word[1] == "+t") {
-		_listChannel[word[0]].set_mode_topic();
+		_listChannel[word[0]].set_mode_topic(-1);
     } else if (word[1] == "+k") {
-		_listChannel[word[0]].set_password(word[3]);
+		_listChannel[word[0]].set_password(word[3], 1);
     } else if (word[1] == "+o") {
 		_listChannel[word[0]].add_oper(fd_key);
 	} else if (word[1] == "+l") {
 		_listChannel[word[0]].set_limit(word[3]);
-    } else {
+    } else if (word[1] == "-i" && word.size() == 2 && _listChannel[word[0]].find_client(fd_key)) {
+		_listChannel[word[0]].set_mode_invite(1);
+	} else if (word[1] == "-t") {
+		_listChannel[word[0]].set_mode_topic(1);
+	} else if (word[1] == "-k") {
+		_listChannel[word[0]].set_password("", 0);
+	} else if (word[1] == "-o") {
+		_listChannel[word[0]].add_oper(fd_key);
+	} else if (word[1] == "-l") {
+		_listChannel[word[0]].set_limit("0");
+	} else {
 		std::string error = ":42Mulhouse 400 " + _mapClients[fd_key].get_nickname() + " MODE :too much arguments to proccess\r\n";
 		send(fd_key, error.c_str(), error.length(), 0);
 	}

@@ -33,9 +33,9 @@ public:
     int remove_client();
 
     void set_topic(std::string topic);
-    void set_mode_invite();
-	void set_mode_topic();
-	void set_password(std::string pass);
+    void set_mode_invite(int flag);
+	void set_mode_topic(int flag);
+	void set_password(std::string pass, int flag);
 	void set_limit(std::string number);
 
     std::string     get_topic();

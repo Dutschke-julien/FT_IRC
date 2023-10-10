@@ -102,16 +102,17 @@ int Channel::remove_client() {
 	return 0;
 }
 
-void Channel::set_mode_topic() {
-	_topic_restriction *= -1;
+void Channel::set_mode_topic(int flag) {
+	_topic_restriction = flag;
 }
 
-void Channel::set_mode_invite() {
-	_invite_only *= -1;
+void Channel::set_mode_invite(int flag) {
+	_invite_only = flag;
 }
 
-void Channel::set_password(std::string pass) {
+void Channel::set_password(std::string pass, int flag) {
 	_pass = pass;
+	_password_set = flag;
 }
 
 void Channel::set_limit(std::string number) {

@@ -95,7 +95,9 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 			if (verif_name(*it_firstchannel) == 1) {
 				if (_listChannel[*it_firstchannel].get_invite_only() == -1
 					&& _mapClients[fd_key].find_and_remove_invitation(*it_firstchannel) == 0) {
-					error = ":42Mulhouse 473" + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Cannot join channel (invitation only)\r\n";
+					error = ":42Mulhouse KICK #" + *it_firstchannel + " " + _mapClients[fd_key].get_nickname() + "\r\n";
+					send(fd_key, error.c_str(), error.length(), 0);
+					error = ":42Mulhouse 473" + _mapClients[fd_key].get_nickname() + " #" + _mapClients[fd_key].get_current_channel() + " :Cannot join channel (invitation only)\r\n";
 					send(fd_key, error.c_str(), error.length(), 0);
 					return;
 				}

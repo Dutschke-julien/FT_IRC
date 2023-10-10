@@ -41,9 +41,10 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
 		std::cout << "voici la chaine [" << pseudonyme << "]" << std::endl;
         send(fd_key, erreur.c_str(), erreur.length(), 0);
     }
-	else if (isNickTaken(_name_used, pseudonyme) == true)
+	else if (isNickTaken(_name_used, pseudonyme))
 	{
-		pseudonyme + "_";
+		while (isNickTaken(_name_used, pseudonyme))
+			pseudonyme += "_";
         std::string bienvenue = ":42Mulhouse 001 " + pseudonyme + " :Bienvenue sur le serveur IRC\r\n";
         send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
 		del_Nick_toks(_name_used, _mapClients[fd_key].get_nickname());
