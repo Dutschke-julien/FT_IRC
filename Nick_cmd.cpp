@@ -25,6 +25,9 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
 	{
 		pseudonyme.erase(it);
 	}
+     std::stringstream ss;
+     ss << fd_key;
+     std::string str_key = ss.str();
     // Vérifie si le pseudonyme est vide
 	if (_mapClients[fd_key].get_status() == NO_NICK)
 		_mapClients[fd_key].set_status(NO_USERNAME);
@@ -33,17 +36,21 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
         // Pseudonyme manquant, envoie un message d'erreur
         std::string erreur = ":42Mulhouse 431 * :Pseudonyme manquant. Utilisation : /NICK <pseudonyme>\r\n";
         send(fd_key, erreur.c_str(), erreur.length(), 0);
+	return;
     }
-    else if (pseudonyme.find_first_of("#@!:%&*,.- ") != std::string::npos)
+    if (pseudonyme.find_first_of("#@$!:%&*,.- ") != std::string::npos)
     {
         // Caractères non autorisés dans le pseudonyme, envoie un message d'erreur
         std::string erreur = ":42Mulhouse 432 * :Caractères non autorisés dans le pseudonyme\r\n";
 		std::cout << "voici la chaine [" << pseudonyme << "]" << std::endl;
         send(fd_key, erreur.c_str(), erreur.length(), 0);
+	return ;
     }
-	else if (isNickTaken(_name_used, pseudonyme))
+	pseudonyme += "$";
+	pseudonyme += str_key;
+	 if (isNickTaken(_name_used, pseudonyme))
 	{
-		while (isNickTaken(_name_used, pseudonyme))
+		while(isNickTaken(_name_used, pseudonyme))
 			pseudonyme += "_";
         std::string bienvenue = ":42Mulhouse 001 " + pseudonyme + " :Bienvenue sur le serveur IRC\r\n";
         send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
