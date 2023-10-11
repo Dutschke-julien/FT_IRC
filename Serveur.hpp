@@ -91,6 +91,7 @@ class Serveur
     void    cmd_mode(std::string string, int fd_key); // function mode
     void    cmd_join(std::string string, int fd_key); // function Join
     void    cmd_topic(std::string cmd, int fd_key); // function topic
+	void    cmd_invite(std::string string, int fd_key); // function invite
 
     void	set_index_connexion(int index); // setter for connection's index (obsolete)
     int		get_index_connexion(); // getter (obsolete)
