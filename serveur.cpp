@@ -93,7 +93,8 @@ void Serveur::deconnect_client(std::vector<int>& list_Clients_fd, int i)
 	getpeername(list_Clients_fd[i], (struct sockaddr *)&clientAddr, &clientAddrLen);
                    
 	std::cout << "Client déconnecté, adresse IP : " << inet_ntoa(clientAddr.sin_addr)<< ", port : " << clientAddr.sin_port << std::endl;
-	
+	del_Nick_toks(_register, _mapClients[list_Clients_fd[i]].get_realname());
+	del_Nick_toks(_name_used, _mapClients[list_Clients_fd[i]].get_nickname());
 	_mapClients.erase(list_Clients_fd[i]);
 	close(list_Clients_fd[i]);
 	list_Clients_fd[i] = 0;
