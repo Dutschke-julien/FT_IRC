@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:19:56 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/10 17:01:36 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/13 15:52:16 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ class Serveur
 	Serveur(int port, char *password);
 	~Serveur();
 
-    	void set_list_command();
+	int	get_fd(std::string nickname);
+    void set_list_command();
 	void set_port(int pt);
 	int get_port();
 	void set_password(std::string pass);

@@ -12,7 +12,22 @@
 
 #include "Serveur.hpp"
 
-void    Serveur::cmd_tmp(std::string string, int fd_key)
+int		Serveur::get_fd(std::string nickname)
+{
+	if (nickname.empty())
+		return (-1);
+	
+	std::vector<int>::iterator it = _list_Clients_fd.begin();
+	while(it != _list_Clients_fd.end())
+	{
+		if (_mapClients[*it].get_nickname() == nickname)
+			return (*it);
+		it++;
+	}
+	return (-1);
+}
+
+void	Serveur::cmd_tmp(std::string string, int fd_key)
 {
 	(void)string;
 	(void)fd_key;
