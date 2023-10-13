@@ -31,7 +31,8 @@ public:
     int add_client_ban();
 	int add_oper(int fd_key);
 
-    int remove_client();
+    void remove_client(int fd_key);
+	void remove_oper(int fd_key);
 
     void set_topic(std::string topic);
     void set_mode_invite(int flag);

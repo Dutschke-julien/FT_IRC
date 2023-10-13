@@ -34,12 +34,19 @@ int Serveur::get_index_connexion() {
 void    Serveur::cmd_invite(std::string string, int fd_key) {
 	string.erase(string.find_last_of('\n'), 1);
 	string.erase(string.find_last_of('\r'), 1);
-	string.erase(string.find_first_of('#'), 1);
-
-	if (string.find('#') != string.npos) {
+	if (string.find('#') == std::string::npos) {
 		std::string error = ":42Mulhouse 461 "
 		                    + _mapClients[fd_key].get_nickname()
-		                    + " INVITE : bad channel mask\r\n";
+		                    + "#" + _mapClients[fd_key].get_current_channel() + " INVITE "
+							+ " : bad channel mask\r\n";
+		send(fd_key, error.c_str(), error.length(), 0);
+		return;
+	}
+	string.erase(string.find_first_of('#'), 1);
+	if (string.find('#') != std::string::npos) {
+		std::string error = ":42Mulhouse 461 "
+							+ _mapClients[fd_key].get_nickname()
+							+ " INVITE : bad channel mask\r\n";
 		send(fd_key, error.c_str(), error.length(), 0);
 		return;
 	}
@@ -63,6 +70,22 @@ void    Serveur::cmd_invite(std::string string, int fd_key) {
 		send(fd_key, erreur.c_str(), erreur.length(), 0);
 		return;
 	}
+	if (_listChannel[word[1]].find_client(fd_key) == 0) {
+		std::string erreur = ":42Mulhouse 442 " + _mapClients[fd_key].get_nickname()
+							 + " #" + word[1] +  " :You're not on that channel\r\n";
+		send(fd_key, erreur.c_str(), erreur.length(), 0);
+		return;
+	}
+	if (get_fd(word[0]) == -1) {
+		return;
+	}
+	if (_listChannel[word[1]].find_client(get_fd(word[0])) == 1) {
+		std::string erreur = ":42Mulhouse 443 " + _mapClients[fd_key].get_nickname()
+							+ " " + word[0]
+							+ " #" + word[1] + " :is already on channel\r\n";
+		send(fd_key, erreur.c_str(), erreur.length(), 0);
+		return;
+	}
 	if (_listChannel[word[1]].get_invite_only() == -1
 			&& _listChannel[word[1]].find_oper(fd_key) == 0) {
 		std::string error = ":42Mulhouse 482 "
@@ -72,6 +95,14 @@ void    Serveur::cmd_invite(std::string string, int fd_key) {
 		send(fd_key, error.c_str(), error.length(), 0);
 		return;
 	}
-
-	(void)fd_key;
+	std::string reply = ":" + _mapClients[fd_key].get_nickname()
+			+ " INVITE " + word[0]
+			+ " #" + word[1] + "\r\n";
+	send(get_fd(word[0]), reply.c_str(), reply.length(), 0);
+	_mapClients[get_fd(word[0])].add_channel_invitation(word[1]);
+	reply = ":42Mulhouse 341 "
+						+ _mapClients[fd_key].get_nickname()
+						+ " " + word[0]
+						+ " #" + word[1] + "\r\n";
+	send(fd_key, reply.c_str(), reply.length(), 0);
 }

@@ -98,8 +98,12 @@ int Channel::add_client_ban() {
 	return 0;
 }
 
-int Channel::remove_client() {
-	return 0;
+void Channel::remove_client(int fd_key) {
+	_full_list.remove(fd_key);
+}
+
+void Channel::remove_oper(int fd_key) {
+	_oper.remove(fd_key);
 }
 
 void Channel::set_mode_topic(int flag) {

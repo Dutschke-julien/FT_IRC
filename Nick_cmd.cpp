@@ -25,9 +25,7 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
 	{
 		pseudonyme.erase(it);
 	}
-     std::stringstream ss;
-     ss << fd_key;
-     std::string str_key = ss.str();
+
     // Vérifie si le pseudonyme est vide
 	if (_mapClients[fd_key].get_status() == NO_NICK)
 		_mapClients[fd_key].set_status(NO_USERNAME);
@@ -46,8 +44,6 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
         send(fd_key, erreur.c_str(), erreur.length(), 0);
 	return ;
     }
-	pseudonyme += "$";
-	pseudonyme += str_key;
 	 if (isNickTaken(_name_used, pseudonyme))
 	{
 		while(isNickTaken(_name_used, pseudonyme))

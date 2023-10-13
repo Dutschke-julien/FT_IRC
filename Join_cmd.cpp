@@ -11,7 +11,10 @@ void Serveur::reply_join(std::string channel, int fd_key) {
     send_topic(_mapClients[fd_key].get_current_channel(), fd_key);
     for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
         reply = ":42Mulhouse 353 " + _mapClients[fd_key].get_nickname() + " = #" + channel
-                + " :" + _mapClients[*i].get_nickname() + "\r\n";
+                + " :" ;
+		if (_listChannel[channel].find_oper(*i))
+			reply += "@";
+		reply += _mapClients[*i].get_nickname() + "\r\n";
         send(fd_key, reply.c_str(), reply.length(), 0);
     }
     reply = ":42Mulhouse 366 " + _mapClients[fd_key].get_nickname() + " #" + channel
@@ -31,11 +34,9 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 	int ret_status;
 	int index = 0;
 
-//    if (_mapClients[fd_key].get_status() != 2) {
-//        std::string erreur = ":42Mulhouse 475 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Cannot join channel(wrong key)\r\n";
-//        send(fd_key, erreur.c_str(), erreur.length(), 0);
-//        return;
-//    }
+    if (_mapClients[fd_key].get_status() != ALL_OK) {
+        return;
+    }
 
 	del_space = string.begin();
 	while (*del_space == ' '){
