@@ -52,7 +52,7 @@ class Serveur
         std::string cmd;
         void	(Serveur::*f)(std::string, int);
     };
-    struct s_list_cmd _list_cmd[11]; // the array
+    struct s_list_cmd _list_cmd[10]; // the array
 
     std::map<std::string, Channel> _listChannel;
 	std::vector<std::string> _name_used;
@@ -61,7 +61,7 @@ class Serveur
 
 	int	_serverSocket_fd;
 	int _port;
-	int _index_connection; // (obsolete)
+	int _index_connection;
 
 	public:
 	Serveur(int port, char *password);
@@ -93,9 +93,11 @@ class Serveur
     void    cmd_join(std::string string, int fd_key); // function Join
     void    cmd_topic(std::string cmd, int fd_key); // function topic
 	void    cmd_invite(std::string string, int fd_key); // function invite
+	void    cmd_kick(std::string string, int fd_key);
+	void    cmd_msg(std::string string, int fd_key);
 
-    void	set_index_connexion(int index); // setter for connection's index (obsolete)
-    int		get_index_connexion(); // getter (obsolete)
+    void	set_index_connexion(int index); // setter for connection's index
+    int		get_index_connexion(); // getter
 
     void    reply_join(std::string channel, int fd_key); //function which send reply, topic and list to the client
     int     verif_name(std::string name); //verification if the channel already exit

@@ -33,6 +33,8 @@ SOURCES =   main.cpp\
 			Nick_cmd.cpp \
 			Topic_cmd.cpp \
 			Mode_cmd.cpp \
+			cmd_lil.cpp \
+			cmd_prv_msg.cpp \
 
 # Fichiers objets
 

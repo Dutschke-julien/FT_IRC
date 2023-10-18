@@ -159,7 +159,7 @@ void Serveur::commun_cmd(std::string cmd, int fd_key) {
 
     if (cmd != "PING 42Mulhouse\r\n")
         std::cout << "le client [" << fd_key << "] a envoyer la cmd suivante : " << cmd << std::endl;
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < 10; ++i) {
         if (word == _list_cmd[i].cmd) {
             cmd.erase(cmd.begin(), start_it);
             (this->*_list_cmd[i].f)(cmd, fd_key);
@@ -291,11 +291,11 @@ void Serveur::set_list_command() {
 	this->_list_cmd[1].cmd = "NICK";
     this->_list_cmd[1].f = &Serveur::cmd_Nick;
     this->_list_cmd[2].cmd = "PRVMSG";
-    this->_list_cmd[2].f = &Serveur::cmd_tmp;
+    this->_list_cmd[2].f = &Serveur::cmd_msg;
     this->_list_cmd[3].cmd = "USER";
     this->_list_cmd[3].f = &Serveur::cmd_User;
     this->_list_cmd[4].cmd = "KICK";
-    this->_list_cmd[4].f = &Serveur::cmd_tmp;
+    this->_list_cmd[4].f = &Serveur::cmd_kick;
     this->_list_cmd[5].cmd = "PASS";
     this->_list_cmd[5].f = &Serveur::Cmd_Pass;
     this->_list_cmd[6].cmd = "INVITE";
@@ -304,8 +304,6 @@ void Serveur::set_list_command() {
     this->_list_cmd[7].f = &Serveur::cmd_topic;
     this->_list_cmd[8].cmd = "MODE";
     this->_list_cmd[8].f = &Serveur::cmd_mode;
-    this->_list_cmd[9].cmd = "OPER";
-    this->_list_cmd[9].f = &Serveur::cmd_tmp;
-	this->_list_cmd[10].cmd = "userhost";
-    this->_list_cmd[10].f = &Serveur::cmd_User;
+	this->_list_cmd[9].cmd = "userhost";
+    this->_list_cmd[9].f = &Serveur::cmd_User;
 }
