@@ -19,6 +19,7 @@ private:
 	std::list<int>  _oper;
 	std::list<int>  _ban;
     std::string     _topic;
+	int				_host;
 
 public:
     Channel(int fd);
@@ -48,6 +49,7 @@ public:
 
     int find_client(int fd_key);
     int find_oper(int fd_key);
+	int find_host(int fd_key);
 };
 
 

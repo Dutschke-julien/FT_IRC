@@ -74,7 +74,7 @@ void Serveur::cmd_kick(std::string string , int fd_key) {
 	std::string kick = ":42Mulhouse KICK #" + word[0] + " " + word[1];
 	std::cout << "find 6\n";
 	if (word.size() == 3)
-		kick += " :" + word[3];
+		kick += " :" + word[2];
 	else
 		kick += " : No reason was given";
 	std::cout << "find 6.5\n";

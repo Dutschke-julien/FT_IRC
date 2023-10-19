@@ -10,6 +10,7 @@ Channel::Channel(int fd) {
     _password_set = 1;
     _limit_client = 0;
 	_full_list.push_back(fd);
+	_host = fd;
 }
 
 Channel::Channel(int fd, std::string pass) {
@@ -19,6 +20,13 @@ Channel::Channel(int fd, std::string pass) {
     _topic_restriction = 1;
     _password_set = 1;
     _limit_client = 0;
+	_host = fd;
+}
+
+int Channel::find_host(int fd_key) {
+	if (fd_key == _host)
+		return (1);
+	return (0);
 }
 
 int Channel::find_client(int fd_key) {

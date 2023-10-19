@@ -6,7 +6,7 @@
 #    By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/24 11:12:17 by jdutschk          #+#    #+#              #
-#    Updated: 2023/07/24 11:15:17 by jdutschk         ###   ########.fr        #
+#    Updated: 2023/10/19 18:14:45 by jdutschk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ NAME = ircserv
 CXX = c++
 
 # Flags de compilation
-CXXFLAGS = -Wall -Werror -Wextra -std=c++98
+CXXFLAGS = -g3 -Wall -Werror -Wextra -std=c++98
 
 # Fichiers sources du programme
 SOURCES =   main.cpp\

@@ -8,15 +8,19 @@ void Serveur::reply_join(std::string channel, int fd_key) {
     for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
         send(*i, reply.c_str(), reply.length(), 0);
     }
-    send_topic(_mapClients[fd_key].get_current_channel(), fd_key);
+	if (!(_listChannel[channel].get_topic().empty()))
+		send_topic(_mapClients[fd_key].get_current_channel(), fd_key);
+	std::cout << " current channel = " << _mapClients[fd_key].get_current_channel() << std::endl;
+    reply = ":42Mulhouse 353 " + _mapClients[fd_key].get_nickname()
+			+ " = #" + channel
+			+ " :" ;
     for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
-        reply = ":42Mulhouse 353 " + _mapClients[fd_key].get_nickname() + " = #" + channel
-                + " :" ;
-		if (_listChannel[channel].find_oper(*i))
+		if (_listChannel[channel].find_host(*i) || _listChannel[channel].find_oper(*i))
 			reply += "@";
-		reply += _mapClients[*i].get_nickname() + "\r\n";
-        send(fd_key, reply.c_str(), reply.length(), 0);
+		reply += _mapClients[*i].get_nickname() + " ";
     }
+		reply += "\r\n";
+        send(fd_key, reply.c_str(), reply.length(), 0);
     reply = ":42Mulhouse 366 " + _mapClients[fd_key].get_nickname() + " #" + channel
             + " :End of /NAMES list\r\n";
     send(fd_key, reply.c_str(), reply.length(), 0);

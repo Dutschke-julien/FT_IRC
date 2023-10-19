@@ -45,8 +45,8 @@ void Serveur::cmd_msg(std::string string, int fd_key) {
 		}
 		std::list<int> user = _listChannel[word[0]].get_list_user();
 		for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
-			std::string reply = ":" + _mapClients[fd_key].get_nickname()
-								+ " PRVMSG #" + word[0]
+			std::string reply = ":#" + _mapClients[fd_key].get_nickname() 
+								+ " PRIVMSG " + word[0]
 								+ " :" + second
 			                    + "\r\n";
 			if (*i != fd_key)
@@ -54,13 +54,14 @@ void Serveur::cmd_msg(std::string string, int fd_key) {
 		}
 	} else {
 		if (get_fd(word[0]) == -1) {
+			std::cout << "nickname not found\n";
 			std::string erreur = ":42Mulhouse 401 " + _mapClients[fd_key].get_nickname()
 			                     + " " + word[0] +  " :No such nickname\r\n";
 			send(fd_key, erreur.c_str(), erreur.length(), 0);
 			return;
 		}
 		std::string reply = ":" + _mapClients[fd_key].get_nickname()
-				+ " PRVMSG " + word[0]
+				+ " PRIVMSG " + word[0]
 				+ " :" + second
 				+ "\r\n";
 		send(get_fd(word[0]), reply.c_str(), reply.length(), 0);
