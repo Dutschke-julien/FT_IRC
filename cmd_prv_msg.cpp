@@ -45,8 +45,8 @@ void Serveur::cmd_msg(std::string string, int fd_key) {
 		}
 		std::list<int> user = _listChannel[word[0]].get_list_user();
 		for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
-			std::string reply = ":#" + _mapClients[fd_key].get_nickname() 
-								+ " PRIVMSG " + word[0]
+			std::string reply = ":" + _mapClients[fd_key].get_nickname() 
+								+ " PRIVMSG #" + word[0]
 								+ " :" + second
 			                    + "\r\n";
 			if (*i != fd_key)
