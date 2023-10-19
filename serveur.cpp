@@ -6,7 +6,7 @@
 /*   By: aho <aho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by aho          #+#    #+#             */
-/*   Updated: 2023/09/25 17:17:02 by aho         ###   ########.fr       */
+/*   Updated: 2023/10/19 15:49:43 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,7 +290,7 @@ void Serveur::set_list_command() {
 	this->_list_cmd[0].f = &Serveur::cmd_join;
 	this->_list_cmd[1].cmd = "NICK";
     this->_list_cmd[1].f = &Serveur::cmd_Nick;
-    this->_list_cmd[2].cmd = "PRVMSG";
+    this->_list_cmd[2].cmd = "PRIVMSG";
     this->_list_cmd[2].f = &Serveur::cmd_msg;
     this->_list_cmd[3].cmd = "USER";
     this->_list_cmd[3].f = &Serveur::cmd_User;

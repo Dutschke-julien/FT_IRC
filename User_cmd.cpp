@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:02:42 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/10 17:00:23 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/19 15:40:00 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,16 @@ void Serveur::cmd_User(std::string cmd, int fd_key)
 			username += "_";
 			_mapClients[fd_key].set_realname(real_Name);
 			_register.push_back(username);
-			std::string bienvenue = ":42Mulhouse 001 " + username + " :Bienvenue sur votre serveur IRC\r\n";
-			send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
+			//std::string bienvenue = ":42Mulhouse 001 " + username + " :Bienvenue sur votre serveur IRC\r\n";
+			//send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
 			_mapClients[fd_key].set_status(ALL_OK);
 		}
 		else
 		{
 			_mapClients[fd_key].set_realname(real_Name);
 			_register.push_back(username);
-			std::string bienvenue = ":42Mulhouse 001 " + username + " :Bienvenue sur votre serveur IRC\r\n";
-			send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
+			//std::string bienvenue = ":42Mulhouse 001 " + username + " :Bienvenue sur votre serveur IRC\r\n";
+			//send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
 			_mapClients[fd_key].set_status(ALL_OK);
 		}
 }

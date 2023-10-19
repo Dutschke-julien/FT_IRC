@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 17:56:57 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/10 18:10:42 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/19 15:32:50 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,19 @@ void Serveur::cmd_Nick(std::string cmd, int fd_key)
         send(fd_key, erreur.c_str(), erreur.length(), 0);
 	return ;
     }
+
+
+
+
 	 if (isNickTaken(_name_used, pseudonyme))
 	{
+		std::string  message2 = ":" + _mapClients[fd_key].get_nickname() + " NICK ";
 		while(isNickTaken(_name_used, pseudonyme))
 			pseudonyme += "_";
+		message2 += pseudonyme + "\r\n";
         std::string bienvenue = ":42Mulhouse 001 " + pseudonyme + " :Bienvenue sur le serveur IRC\r\n";
         send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
+		send(fd_key, message2.c_str(), message2.length(), 0);
 		del_Nick_toks(_name_used, _mapClients[fd_key].get_nickname());
 		_name_used.push_back(pseudonyme);
 		_mapClients[fd_key].set_nickname(pseudonyme);
