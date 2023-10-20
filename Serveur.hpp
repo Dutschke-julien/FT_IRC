@@ -62,13 +62,16 @@ class Serveur
 	int	_serverSocket_fd;
 	int _port;
 	int _index_connection;
+	int _first_connection;
+	int _moderator;
 
 	public:
 	Serveur(int port, char *password);
 	~Serveur();
 
+	int 	get_moderator();
 	int	get_fd(std::string nickname);
-    void set_list_command();
+	void set_list_command();
 	void set_port(int pt);
 	int get_port();
 	void set_password(std::string pass);
