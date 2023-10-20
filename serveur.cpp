@@ -12,6 +12,11 @@
 
 #include "Serveur.hpp"
 
+int Serveur::get_moderator()
+{
+	return (_moderator);
+}
+
 int		Serveur::get_fd(std::string nickname)
 {
 	if (nickname.empty())
@@ -57,8 +62,9 @@ std::string Serveur::get_password()
 Serveur::Serveur(int port, char *password)
 {
     sockaddr_in serverAddr;
+    _first_connection = 0;
     
-	std::cout << "constructor call\n";
+    std::cout << "constructor call\n";
     _serverSocket_fd = socket(AF_INET, SOCK_STREAM, 0);
 	_list_Clients_fd.resize(MAX_CLIENTS, 0);
 
@@ -265,7 +271,10 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
                 exit(EXIT_FAILURE);
             }
 
-
+		if (_first_connection == 0)
+		{
+			_moderator = clientSocket_fd;
+		}
             std::cout << "Nouvelle connexion, socket fd : " << clientSocket_fd //fd correspondant
                       << ", adresse IP : " << inet_ntoa(clientAddr.sin_addr) //ip correspondant
                       << ", port : " << clientAddr.sin_port << std::endl; // port correspondant
