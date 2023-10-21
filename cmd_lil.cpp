@@ -42,18 +42,15 @@ void Serveur::cmd_kick(std::string string , int fd_key) {
 		send(fd_key, erreur.c_str(), erreur.length(), 0);
 		return;
 	}
-	std::cout << "find 1\n";
 	if (_listChannel[word[0]].find_client(fd_key) == 0) {
 		std::string erreur = ":42Mulhouse 442 " + _mapClients[fd_key].get_nickname()
 		                     + " #" + word[0] +  " :You're not on that channel\r\n";
 		send(fd_key, erreur.c_str(), erreur.length(), 0);
 		return;
 	}
-	std::cout << "find 2\n";
 	if (get_fd(word[1]) == -1) {
 		return;
 	}
-	std::cout << "find 3\n";
 	if (_listChannel[word[0]].get_topic_restriction() == -1 && _listChannel[word[0]].find_oper(fd_key) == 0){
 		std::string error = ":42Mulhouse 482 "
 		                    + _mapClients[fd_key].get_nickname()
@@ -62,7 +59,6 @@ void Serveur::cmd_kick(std::string string , int fd_key) {
 		send(fd_key, error.c_str(), error.length(), 0);
 		return;
 	}
-	std::cout << "find 4\n";
 	if (_listChannel[word[0]].find_client(get_fd(word[1])) == 0) {
 		std::string erreur = ":42Mulhouse 441 " + _mapClients[fd_key].get_nickname()
 		                     + " " + word[1]
@@ -70,18 +66,18 @@ void Serveur::cmd_kick(std::string string , int fd_key) {
 		send(fd_key, erreur.c_str(), erreur.length(), 0);
 		return;
 	}
-	std::cout << "find 5\n";
 	std::string kick = ":42Mulhouse KICK #" + word[0] + " " + word[1];
-	std::cout << "find 6\n";
-	if (word.size() == 3)
+	if (word.size() == 3 && word[2] != ":")
 		kick += " :" + word[2];
 	else
 		kick += " : No reason was given";
-	std::cout << "find 6.5\n";
 	kick += "\r\n";
-	std::cout << "find 7\n";
 	send(get_fd(word[1]), kick.c_str(), kick.length(), 0);
 	_listChannel[word[0]].remove_client(get_fd(word[1]));
+	std::list<int> user = _listChannel[word[0]].get_list_user();
+	for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
+		send(*i, kick.c_str(), kick.length(), 0);
+	}
 }
 
 // SAME FUNCTION
@@ -132,6 +128,9 @@ void    Serveur::cmd_invite(std::string string, int fd_key) {
 		return;
 	}
 	if (get_fd(word[0]) == -1) {
+		std::string erreur = ":42Mulhouse 401 " + _mapClients[fd_key].get_nickname()
+		                     + " " + word[0] +  " :No such nickname\r\n";
+		send(fd_key, erreur.c_str(), erreur.length(), 0);
 		return;
 	}
 	if (_listChannel[word[1]].find_client(get_fd(word[0])) == 1) {

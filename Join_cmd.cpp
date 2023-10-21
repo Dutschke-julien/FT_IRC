@@ -4,12 +4,17 @@
 void Serveur::reply_join(std::string channel, int fd_key) {
     _mapClients[fd_key].set_current_channel(channel);
     std::list<int> user = _listChannel[channel].get_list_user();
-
+	std::string reply;
 	// create the reply sent to everyone in the channel
-    std::string reply = ":" + _mapClients[fd_key].get_nickname() + " JOIN #" + channel + "\r\n";
     for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
-        send(*i, reply.c_str(), reply.length(), 0);
-    }
+		if (*i == fd_key)
+			reply = ":" + _mapClients[fd_key].get_nickname() + " JOIN #" + channel + "\r\n";
+		else
+			reply = ":42Mulhouse PRIVMSG #" + channel
+			                    + " :" + _mapClients[fd_key].get_nickname()
+			                    + " has joined the channel #" + channel + "\r\n";
+		send(*i, reply.c_str(), reply.length(), 0);
+	}
 
 	// send the topic at the joining client
 	if (!(_listChannel[channel].get_topic().empty()))
