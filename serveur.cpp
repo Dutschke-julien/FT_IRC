@@ -274,6 +274,7 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
 		if (_first_connection == 0)
 		{
 			_moderator = clientSocket_fd;
+		        _first_connection = 1;
 		}
             std::cout << "Nouvelle connexion, socket fd : " << clientSocket_fd //fd correspondant
                       << ", adresse IP : " << inet_ntoa(clientAddr.sin_addr) //ip correspondant
