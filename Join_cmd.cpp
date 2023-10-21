@@ -4,23 +4,30 @@
 void Serveur::reply_join(std::string channel, int fd_key) {
     _mapClients[fd_key].set_current_channel(channel);
     std::list<int> user = _listChannel[channel].get_list_user();
+
+	// create the reply sent to everyone in the channel
     std::string reply = ":" + _mapClients[fd_key].get_nickname() + " JOIN #" + channel + "\r\n";
     for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
         send(*i, reply.c_str(), reply.length(), 0);
     }
+
+	// send the topic at the joining client
 	if (!(_listChannel[channel].get_topic().empty()))
 		send_topic(_mapClients[fd_key].get_current_channel(), fd_key);
-	std::cout << " current channel = " << _mapClients[fd_key].get_current_channel() << std::endl;
+
+	// create the list of the client currently in the channel and send it to the joining client
     reply = ":42Mulhouse 353 " + _mapClients[fd_key].get_nickname()
 			+ " = #" + channel
 			+ " :" ;
     for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
-		if (_listChannel[channel].find_host(*i) || _listChannel[channel].find_oper(*i))
+		if (_listChannel[channel].find_oper(*i))
 			reply += "@";
 		reply += _mapClients[*i].get_nickname() + " ";
     }
-		reply += "\r\n";
-        send(fd_key, reply.c_str(), reply.length(), 0);
+	reply += "\r\n";
+	send(fd_key, reply.c_str(), reply.length(), 0);
+
+	// reply the end of name list
     reply = ":42Mulhouse 366 " + _mapClients[fd_key].get_nickname() + " #" + channel
             + " :End of /NAMES list\r\n";
     send(fd_key, reply.c_str(), reply.length(), 0);
