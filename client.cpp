@@ -12,6 +12,18 @@ void	Client::add_channel_invitation(std::string channel) {
 	_channel_invite.push_back(channel);
 }
 
+void	Client::add_channel(std::string channel) {
+	_list_channel_join.push_back(channel);
+}
+
+void	Client::remove_channel(std::string channel) {
+	_list_channel_join.remove(channel);
+}
+
+std::list<std::string> Client::get_list_joined_channel() {
+	return _list_channel_join;
+}
+
 int Client::find_and_remove_invitation(std::string channel) {
 	for (std::list<std::string>::iterator i = _channel_invite.begin(); i != _channel_invite.end() ; i++) {
 		if (*i == channel) {

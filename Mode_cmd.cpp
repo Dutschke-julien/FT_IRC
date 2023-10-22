@@ -38,7 +38,7 @@ void Serveur::cmd_mode(std::string string, int fd_key) {
 		_listChannel[word[0]].set_mode_topic(-1);
     } else if (word[1] == "+k" && word.size() == 3) {
 		_listChannel[word[0]].set_password(word[2], 1);
-    } else if (word[1] == "+o"
+    } else if (word[1] == "+o" && word.size() == 3
 			   && _listChannel[word[0]].find_client(get_fd(word[2]))) {
 		_listChannel[word[0]].add_oper(get_fd(word[2]));
 	} else if (word[1] == "+l" && word.size() == 3) {

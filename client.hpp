@@ -22,6 +22,7 @@ class Client
 	std::string _username;
 	std::string _realname;	
 	int 		_status;
+	std::list<std::string> _list_channel_join;
     std::string _current_channel;
 	std::list<std::string> _channel_invite;
 
@@ -45,6 +46,9 @@ class Client
     std::string get_current_channel();
 	void	add_channel_invitation(std::string channel);
 	int	find_and_remove_invitation(std::string channel);
+	void    add_channel(std::string channel);
+	void    remove_channel(std::string channel);
+	std::list<std::string> get_list_joined_channel();
 };
 
 

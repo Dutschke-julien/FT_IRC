@@ -114,6 +114,25 @@ void Serveur::deconnect_client(std::vector<int>& list_Clients_fd, int i)
 	getpeername(list_Clients_fd[i], (struct sockaddr *)&clientAddr, &clientAddrLen);
                    
 	std::cout << "Client déconnecté, adresse IP : " << inet_ntoa(clientAddr.sin_addr)<< ", port : " << clientAddr.sin_port << std::endl;
+
+
+	// code added to remove the client out of every channel which it was in and signal his peer
+	std::list<std::string> chann = _mapClients[list_Clients_fd[i]].get_list_joined_channel();
+	for (std::list<std::string>::iterator j = chann.begin(); j != chann.end() ; j++) {
+		if (_listChannel[*j].get_list_user().size() == 1 && _listChannel[*j].find_client(list_Clients_fd[i]))
+			_listChannel.erase(*j);
+		else {
+			_listChannel[*j].remove_client(list_Clients_fd[i]);
+			std::list<int> user = _listChannel[*j].get_list_user();
+			for (std::list<int>::iterator k = user.begin(); k != user.end(); k++) {
+				std::string kick = ":" + _mapClients[list_Clients_fd[i]].get_nickname()
+						+ " PART #" + *j + "\r\n";
+				send(*k, kick.c_str(), kick.length(), 0);
+			}
+		}
+	}
+	// end of the code -----------------------------------------------------------------------
+
 	del_Nick_toks(_register, _mapClients[list_Clients_fd[i]].get_realname());
 	del_Nick_toks(_name_used, _mapClients[list_Clients_fd[i]].get_nickname());
 	_mapClients.erase(list_Clients_fd[i]);

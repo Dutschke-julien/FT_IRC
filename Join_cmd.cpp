@@ -5,7 +5,6 @@ void Serveur::reply_join(std::string channel, int fd_key) {
     _mapClients[fd_key].set_current_channel(channel);
     std::list<int> user = _listChannel[channel].get_list_user();
 	std::string reply;
-	// create the reply sent to everyone in the channel
     for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
 		if (*i == fd_key)
 			reply = ":" + _mapClients[fd_key].get_nickname() + " JOIN #" + channel + "\r\n";
@@ -15,12 +14,9 @@ void Serveur::reply_join(std::string channel, int fd_key) {
 			                    + " has joined the channel #" + channel + "\r\n";
 		send(*i, reply.c_str(), reply.length(), 0);
 	}
-
-	// send the topic at the joining client
 	if (!(_listChannel[channel].get_topic().empty()))
 		send_topic(_mapClients[fd_key].get_current_channel(), fd_key);
 
-	// create the list of the client currently in the channel and send it to the joining client
     reply = ":42Mulhouse 353 " + _mapClients[fd_key].get_nickname()
 			+ " = #" + channel
 			+ " :" ;
@@ -31,8 +27,6 @@ void Serveur::reply_join(std::string channel, int fd_key) {
     }
 	reply += "\r\n";
 	send(fd_key, reply.c_str(), reply.length(), 0);
-
-	// reply the end of name list
     reply = ":42Mulhouse 366 " + _mapClients[fd_key].get_nickname() + " #" + channel
             + " :End of /NAMES list\r\n";
     send(fd_key, reply.c_str(), reply.length(), 0);
@@ -62,11 +56,9 @@ void Serveur::cmd_join(std::string string, int fd_key) {
     string.erase(string.find_last_of('\r'), 1);
 
     if (string == ":") {
-	    std::cout << "JOIN :: send : verif system" << std::endl;
         return;
     }
     if (string.empty()) {
-	    std::cout << "JOIN :: send : not enough parameters (empty)" << std::endl;
         error = ":42Mulhouse 461 " + _mapClients[fd_key].get_nickname() + "/join : not enough parameters\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
         return;
@@ -102,7 +94,6 @@ void Serveur::cmd_join(std::string string, int fd_key) {
         }
     }
 	if (list_channel.size() < list_key.size()) {
-		std::cout << "JOIN :: send : bad channel mask (too much key)" << std::endl;
 		error = ":42Mulhouse 403 " + _mapClients[fd_key].get_nickname() + " : bad channel mask\r\n";
         send(fd_key, error.c_str(), error.length(), 0);
 		return;
@@ -112,9 +103,9 @@ void Serveur::cmd_join(std::string string, int fd_key) {
 			if (verif_name(*it_firstchannel) == 1) {
 				if (_listChannel[*it_firstchannel].get_invite_only() == -1
 					&& _mapClients[fd_key].find_and_remove_invitation(*it_firstchannel) == 0) {
-					error = ":42Mulhouse KICK #" + *it_firstchannel + " " + _mapClients[fd_key].get_nickname() + "\r\n";
-					send(fd_key, error.c_str(), error.length(), 0);
-					error = ":42Mulhouse 473" + _mapClients[fd_key].get_nickname() + " #" + _mapClients[fd_key].get_current_channel() + " :Cannot join channel (invitation only)\r\n";
+//					error = ":42Mulhouse KICK #" + *it_firstchannel + " " + _mapClients[fd_key].get_nickname() + "\r\n";
+//					send(fd_key, error.c_str(), error.length(), 0);
+					error = ":42Mulhouse 473 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Cannot join channel (invitation only)\r\n";
 					send(fd_key, error.c_str(), error.length(), 0);
 					return;
 				}
@@ -126,42 +117,37 @@ void Serveur::cmd_join(std::string string, int fd_key) {
                     ret_status = _listChannel[*it_firstchannel].add_client(fd_key, list_key[0]);
 				switch (ret_status) {
 					case -1:
-                        std::cout << "JOIN :: send : banned\n";
 						error = ":42Mulhouse 474 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :You are banned from this channel\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						return;
 					case -2:
-                        std::cout << "JOIN :: already registered\n";
                         _mapClients[fd_key].set_current_channel(*it_firstchannel);
 						return;
 					case -3:
-						std::cout << "JOIN :: send : wrong key\n";
                         error = ":42Mulhouse 475 " + _mapClients[fd_key].get_nickname() + " #" + *it_firstchannel + " :Cannot join channel(wrong key)\r\n";
-                        std::cout << error << " = error created\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						return;
 					case 2:
                         reply_join(*it_firstchannel, fd_key);
+						_mapClients[fd_key].add_channel(*it_firstchannel);
 						list_key.erase(list_key.begin());
-                        std::cout << "JOIN :: ok case2 (key)\n";
 						return;
                     case 0:
                         reply_join(*it_firstchannel, fd_key);
-                        std::cout << "JOIN :: ok case0 (no key)\n";
+						_mapClients[fd_key].add_channel(*it_firstchannel);
                         return;
 					default:
-                        std::cout << "JOIN :: send : default\n";
 						error = ":42Mulhouse 400 " + _mapClients[fd_key].get_nickname() + " JOIN :Unexpected error from a /Join command\r\n";
 						send(fd_key, error.c_str(), error.length(), 0);
 						return;
 				}
 			} else if (list_key.empty()) {
-				std::cout << "JOIN :: channel created without key == " << *it_firstchannel << std::endl;
 				_listChannel[*it_firstchannel] = Channel(fd_key);
+				_mapClients[fd_key].add_channel(*it_firstchannel);
                 reply_join(*it_firstchannel, fd_key);
 			} else {
-				std::cout << "JOIN :: channel created with key == " << *it_firstchannel << " && " << *(list_key.begin()) << std::endl;
 				_listChannel[*it_firstchannel] = Channel(fd_key, *(list_key.begin()));
+				_mapClients[fd_key].add_channel(*it_firstchannel);
                 reply_join(*it_firstchannel, fd_key);
 				list_key.erase(list_key.begin());
 			}

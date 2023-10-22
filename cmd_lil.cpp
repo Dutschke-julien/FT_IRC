@@ -72,11 +72,15 @@ void Serveur::cmd_kick(std::string string , int fd_key) {
 	else
 		kick += " : No reason was given";
 	kick += "\r\n";
-	send(get_fd(word[1]), kick.c_str(), kick.length(), 0);
-	_listChannel[word[0]].remove_client(get_fd(word[1]));
 	std::list<int> user = _listChannel[word[0]].get_list_user();
-	for (std::list<int>::iterator i = user.begin(); i != user.end() ; i++) {
+	for (std::list<int>::iterator i = user.begin(); i != user.end(); i++) {
 		send(*i, kick.c_str(), kick.length(), 0);
+	}
+	if (_listChannel[word[0]].get_list_user().size() == 1 && get_fd(word[1]) == fd_key)
+		_listChannel.erase(word[0]);
+	else {
+		_listChannel[word[0]].remove_client(get_fd(word[1]));
+		_mapClients[get_fd(word[1])].remove_channel(word[0]);
 	}
 }
 
