@@ -6,7 +6,7 @@
 /*   By: jdutschk <jdutschk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:02:42 by jdutschk          #+#    #+#             */
-/*   Updated: 2023/10/19 15:40:00 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/23 16:12:20 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ void Serveur::cmd_User(std::string cmd, int fd_key)
 			//std::string bienvenue = ":42Mulhouse 001 " + username + " :Bienvenue sur votre serveur IRC\r\n";
 			//send(fd_key, bienvenue.c_str(), bienvenue.length(), 0);
 			_mapClients[fd_key].set_status(ALL_OK);
+			if (fd_key == _moderator)
+			{
+				std::string message = ":42Mulhouse 002 " + _mapClients[fd_key].get_nickname() + " :You become the SuperHost\r\n" ;
+				send(fd_key, message.c_str(), message.length(), 0);
+			}
 		}
 		else
 		{

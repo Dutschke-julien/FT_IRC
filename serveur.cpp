@@ -6,7 +6,7 @@
 /*   By: aho <aho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 16:09:02 by aho          #+#    #+#             */
-/*   Updated: 2023/10/19 15:49:43 by jdutschk         ###   ########.fr       */
+/*   Updated: 2023/10/23 16:10:47 by jdutschk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,7 +293,7 @@ void Serveur::add_new_connection(int serverSocket_fd, fd_set Sets_Sockets, std::
 		if (_first_connection == 0)
 		{
 			_moderator = clientSocket_fd;
-		        _first_connection = 1;
+		    _first_connection = 1;
 		}
             std::cout << "Nouvelle connexion, socket fd : " << clientSocket_fd //fd correspondant
                       << ", adresse IP : " << inet_ntoa(clientAddr.sin_addr) //ip correspondant
