@@ -70,6 +70,7 @@ void Serveur::cmd_mode(std::string string, int fd_key) {
 		if (word.size() == 3)
 			reply += " " + word[2];
 		reply += "\r\n";
-		send(*i, reply.c_str(), reply.length(), 0);
+		if (*i != fd_key)
+			send(*i, reply.c_str(), reply.length(), 0);
 	}
 }

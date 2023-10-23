@@ -84,8 +84,6 @@ void Serveur::cmd_kick(std::string string , int fd_key) {
 	}
 }
 
-// SAME FUNCTION
-
 void    Serveur::cmd_invite(std::string string, int fd_key) {
 	string.erase(string.find_last_of('\n'), 1);
 	string.erase(string.find_last_of('\r'), 1);
