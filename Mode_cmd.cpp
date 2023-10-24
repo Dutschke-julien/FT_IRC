@@ -57,7 +57,7 @@ void Serveur::cmd_mode(std::string string, int fd_key) {
 		_listChannel[word[0]].set_limit("0");
 	} else {
 		std::string error = ":42Mulhouse 400 " + _mapClients[fd_key].get_nickname()
-				+ " MODE :too much arguments to proccess\r\n";
+				+ " MODE :Error, please check your command\r\n";
 		send(fd_key, error.c_str(), error.length(), 0);
 		return;
 	}
