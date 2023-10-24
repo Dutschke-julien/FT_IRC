@@ -1,3 +1,0 @@
-[AHO && JDUTSCHK]
-
-[AH]
