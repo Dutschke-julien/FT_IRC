@@ -225,7 +225,6 @@ void Serveur::parsing_cmd(Client& client, int fd_key)
         client.pack.cmd.erase(0, find_command + 2);
         find_command = client.pack.cmd.find("\r\n");
 	}
-	std::cout << "la commande :" << client.pack.cmd;
 }
 
 
